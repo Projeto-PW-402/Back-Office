@@ -62,6 +62,7 @@ import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'luc
         height: 100vh;
         min-height: fit-content;
         max-width: 350px;
+        width: 100%;
     }
 
     .navbar-buttons{
