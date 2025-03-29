@@ -12,7 +12,7 @@
     /* other configs */
     "paths": {
       "@/*": [
-        "./src/*" // set path `@/*` as alias of `src/*`
+        "./*" // set path `@/*` as alias of `src/*`
       ]
     },
     /* other configs */

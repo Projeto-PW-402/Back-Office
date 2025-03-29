@@ -1,8 +1,15 @@
 <script setup lang="ts">
+import Navbar from './components/Navbar.vue'
 </script>
 
 <template>
+    <div class="dashboard-container">
+        <Navbar />
+    </div>
 </template>
 
 <style scoped>
+    .dashboard-container{
+        overflow: hidden;
+    }
 </style>
