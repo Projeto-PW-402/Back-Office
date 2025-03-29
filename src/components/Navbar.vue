@@ -127,8 +127,6 @@ import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'luc
         font-weight: 600;
     }
     .btn-primary:active{
-        /* Button moving fix */
-        height: calc(3.5rem - .5px);
         padding-left: 10px; 
 
         background-color: rgba(217, 217, 217, 15%);
