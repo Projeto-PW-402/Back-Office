@@ -175,7 +175,7 @@ import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'luc
     #logout:active{
         /* Button moving fix */
         height: calc(3.5rem - .5px);
-        padding-left: 10px;
+        padding-left: 12px;
 
         background-color: rgba(217, 217, 217, 15%);
         border: 2px solid #d7d7d7;
