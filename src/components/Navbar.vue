@@ -76,9 +76,7 @@ import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'luc
         min-height: fit-content;
         max-width: 350px;
 
-        font-family: Inter, sans-serif;
-        font-size: 24px;
-        font-weight: semibold;
+
     }
 
     .navbar-logo{
@@ -123,6 +121,10 @@ import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'luc
         padding-left: 12px;
         align-items: center;
         gap: 12px;
+
+        font-family: Inter;
+        font-size: 18px;
+        font-weight: 600;
     }
     .btn-primary:active{
         /* Button moving fix */
@@ -146,6 +148,10 @@ import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'luc
         justify-content: center;
         align-items: center;
         gap: 12px;
+
+        font-family: Inter;
+        font-size: 18px;
+        font-weight: 600;
     }
     .btn-secondary:focus{
         background-color: rgba(217, 217, 217, 15%);
