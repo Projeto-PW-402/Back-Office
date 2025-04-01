@@ -6,8 +6,13 @@ import Estatistica from '../components/Estatistica.vue';
 <template>
     <div class="dashboard-container">
         <Navbar />
-        <div class="information-container">
-            <Estatistica />
+        <div class="container information-container">
+            <div class="row">
+                <Estatistica class="col-sm-"/>
+            </div>
+            <div class="row">
+                <!-- <Estatistica /> -->
+            </div>
         </div>
     </div>
 </template>
