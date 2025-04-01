@@ -44,9 +44,9 @@ import {RouterLink } from 'vue-router';
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink to="/Materias" class="routes">
+                    <RouterLink to="/Materiais" class="routes">
                         <button class="btn btn-primary">
-                            <Anvil color="white"/>Materias
+                            <Anvil color="white"/>Materiais
                         </button>
                     </RouterLink>
                 </li>
