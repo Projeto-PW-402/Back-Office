@@ -4,22 +4,26 @@
 <template>
     <div class="container">
         <div class="title">Estatística</div>
-        <div class="blocks">
-            <div class="block">
-                <div class="block-title">Profissionais Ativos</div>
-                <div class="block-value">0</div>
+        <div class="container blocks">
+            <div class="row">
+                <div class="col-sm- block">
+                    <div class="block-title">Profissionais Ativos</div>
+                    <div class="block-value">0</div>
+                </div>
+                <div class="col-sm- block">
+                    <div class="block-title">Áreas</div>
+                    <div class="block-value">0</div>
+                </div>
             </div>
-            <div class="block">
-                <div class="block-title">Áreas</div>
-                <div class="block-value">0</div>
-            </div>
-            <div class="block">
-                <div class="block-title">Ocurrencias</div>
-                <div class="block-value">0</div>
-            </div>
-            <div class="block">
-                <div class="block-title">Materias</div>
-                <div class="block-value">0</div>
+            <div class="row">
+                <div class="col-sm- block">
+                    <div class="block-title">Ocurrencias</div>
+                    <div class="block-value">0</div>
+                </div>
+                <div class="col-sm- block">
+                    <div class="block-title">Materias</div>
+                    <div class="block-value">0</div>
+                </div>
             </div>
         </div>
     </div>
@@ -27,7 +31,8 @@
 
 <style scoped>
     .container{
-        width: 750px;
+        min-width: 335px;
+        min-height: 154px;
         height: 444px;
 
         display: flex;
@@ -47,7 +52,6 @@
     .blocks{
         /* background-color: aqua; */
         display: flex;
-        flex-wrap: wrap;
         justify-content: center;
         align-items: center;
         gap: 39px;
@@ -61,7 +65,7 @@
         align-items: start;
         gap: 16px;
         width: 335px;
-        height: 164px;
+        height: 154px;
 
         border: 2px solid #000;
         border-radius: 10px;
@@ -90,5 +94,8 @@
         font-weight: 700;
         font-size: 34px;
         font-style: normal;
+    }
+    .row{
+        gap: 35px;
     }
 </style>

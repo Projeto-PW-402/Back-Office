@@ -14,7 +14,7 @@ import Estatistica from '../components/Estatistica.vue';
 
 <style scoped>
     .dashboard-container{
-        overflow: hidden;
+        overflow-x: hidden;
         display: flex;
     }
     .information-container{

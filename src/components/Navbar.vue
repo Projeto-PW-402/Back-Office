@@ -64,6 +64,7 @@ import {RouterLink } from 'vue-router';
 
 <style scoped>
     .navbar-container{
+        position:static;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -72,20 +73,22 @@ import {RouterLink } from 'vue-router';
         background-color: #734414;
         height: 100vh;
         min-height: fit-content;
-        max-width: 350px;
-        width: 100%;
+        max-height: 100dvh;
+        min-width: 300px;
+        width: 20dvw;
     }
 
     .navbar-buttons{
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: space-evenly;
-        padding-block: 4rem;
+        justify-content: space-between;
+        padding-block: 2rem;
 
         background-color: #734414;
         height: 50rem;
-        min-height: fit-content;
+        /* min-height: fit-content;
+        max-height: 100dvh; */
         max-width: 350px;
 
     }
@@ -99,7 +102,6 @@ import {RouterLink } from 'vue-router';
         flex-shrink: 0;
     }
     .navbar-user{
-        margin-top: 5rem;
         width: 15rem;
     }
 
@@ -112,7 +114,6 @@ import {RouterLink } from 'vue-router';
         flex-direction: column;
         gap: 1.875rem;
         padding: 0;
-        padding-top: 70px;
     }
 
     li{
@@ -149,8 +150,6 @@ import {RouterLink } from 'vue-router';
         width: 100%;
         height: 58px;
 
-        /* margin-top: 5rem; */
-
         background-color: rgba(217, 217, 217, 15%);
         border: none;
         display: flex;
@@ -181,7 +180,6 @@ import {RouterLink } from 'vue-router';
         align-items: center;
         gap: 12px;
 
-        margin-top: 5rem;
     }
     #logout:active{
         /* Button moving fix */
