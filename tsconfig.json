@@ -8,8 +8,10 @@
       "path": "./tsconfig.app.json"
     }
   ],
+  // "include": ["./typed-router.d.ts"],
   "compilerOptions": {
     /* other configs */
+    // "moduleResolution": "Bundler",
     "paths": {
       "@/*": [
         "./*" // set path `@/*` as alias of `src/*`

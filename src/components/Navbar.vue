@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'lucide-vue-next';
+import {RouterLink } from 'vue-router';
 </script>
 
 <template>
@@ -15,29 +16,39 @@ import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'luc
         </div>
         <nav>
             <ul>
-                <li>
-                    <button class="btn btn-primary">
-                        <LayoutDashboard color="white"/>Dashboard</button>
+                 <li>
+                    <RouterLink to="/" class="routes">
+                        <button class="btn btn-primary">
+                            <LayoutDashboard color="white"/>Dashboard</button>
+                    </RouterLink>
                 </li>
                 <li>
-                    <button class="btn btn-primary">
-                        <Monitor color="white"/>Monitoramento
-                    </button>
+                    <RouterLink to="/Monitoramento" class="routes">
+                        <button class="btn btn-primary">
+                            <Monitor color="white"/>Monitoramento
+                        </button>
+                    </RouterLink>
                 </li>
                 <li>
-                    <button class="btn btn-primary">
-                        <Users color="white"/>Utilizadores
-                    </button>
+                    <RouterLink to="/Utilizadores" class="routes">
+                        <button class="btn btn-primary">
+                            <Users color="white"/>Utilizadores
+                        </button>
+                    </RouterLink>
                 </li>
                 <li>
-                    <button class="btn btn-primary">
-                        <NotebookPen color="white"/>Auditorias
-                    </button>
+                    <RouterLink to="/Auditorias" class="routes">
+                        <button class="btn btn-primary">
+                            <NotebookPen color="white"/>Auditorias
+                        </button>
+                    </RouterLink>
                 </li>
                 <li>
-                    <button class="btn btn-primary">
-                        <Anvil color="white"/>Materias
-                    </button>
+                    <RouterLink to="/Materias" class="routes">
+                        <button class="btn btn-primary">
+                            <Anvil color="white"/>Materias
+                        </button>
+                    </RouterLink>
                 </li>
             </ul>
         </nav>
@@ -76,7 +87,6 @@ import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'luc
         height: 50rem;
         min-height: fit-content;
         max-width: 350px;
-
 
     }
 
@@ -181,6 +191,11 @@ import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'luc
         background-color: rgba(217, 217, 217, 15%);
         border: 2px solid #d7d7d7;
         color: #fff;
+    }
+
+    .routes{
+        text-decoration: none;
+        width: 100%;
     }
 
 </style>
