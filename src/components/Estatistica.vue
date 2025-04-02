@@ -17,7 +17,7 @@
             </div>
             <div class="row">
                 <div class="col-sm- block">
-                    <div class="block-title">Ocurrencias</div>
+                    <div class="block-title">Ocorrências</div>
                     <div class="block-value">0</div>
                 </div>
                 <div class="col-sm- block">

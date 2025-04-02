@@ -196,4 +196,46 @@ import {RouterLink } from 'vue-router';
         width: 100%;
     }
 
+    @media only screen and (min-width: 1024px) {
+        .navbar-buttons{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding-block: 2rem;
+
+        background-color: #734414;
+        height: 50rem;
+        max-height: 100dvh;
+        /* min-height: fit-content;
+        max-height: 100dvh; */
+        max-width: 350px;
+
+    }
+
+    .navbar-logo{
+        display: flex;
+        width: fit-content;
+        height: fit-content;
+        justify-content:center;
+        align-items:center;
+       
+    }
+    .btn-primary{
+        width: 100%;
+        height: 3.5rem;
+
+        background-color: rgba(217, 217, 217, 15%);
+        border: none;
+        display: flex;
+        justify-content:baseline;
+        padding-left: 12px;
+        align-items: center;
+        gap: 12px;
+
+        font-family: Inter;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    }
 </style>
