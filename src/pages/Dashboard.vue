@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Navbar from '../components/Navbar.vue'
 import Estatistica from '../components/Estatistica.vue';
+import ChartAuditorias from '../components/ChartAuditorias.vue';
 </script>
 
 <template>
@@ -8,10 +9,10 @@ import Estatistica from '../components/Estatistica.vue';
         <Navbar />
         <div class="container information-container">
             <div class="row">
-                <Estatistica class="col-sm-"/>
+                <Estatistica id="estatistica" class="col-sm-"/>
             </div>
             <div class="row">
-                <!-- <Estatistica /> -->
+                <ChartAuditorias id="chart-auditorias" class="col-m-"/>
             </div>
         </div>
     </div>
@@ -27,4 +28,10 @@ import Estatistica from '../components/Estatistica.vue';
         margin-left: 45px;
         margin-top: 55px;
     }
+    /* #chart-auditorias{
+        background-color: aliceblue;
+        transform: scale(1);
+        margin-left: 15rem;
+        margin-top: 10rem;
+    } */
 </style>

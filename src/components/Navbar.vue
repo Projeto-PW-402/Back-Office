@@ -6,58 +6,58 @@ import {RouterLink } from 'vue-router';
 <template>
     <div class="navbar-container">
         <div class="navbar-buttons">
-        <div class="navbar-logo">
-            <img src="../assets/logo.svg" alt="Logo" class="logo" width="145px" height="55px"/>
-        </div>
-        <div class="navbar-user">
-            <button class="btn btn-secondary">
-                User <User color="white"/>
-            </button>
-        </div>
-        <nav>
-            <ul>
-                 <li>
-                    <RouterLink to="/" class="routes">
-                        <button class="btn btn-primary">
-                            <LayoutDashboard color="white"/>Dashboard</button>
-                    </RouterLink>
-                </li>
-                <li>
-                    <RouterLink to="/Monitoramento" class="routes">
-                        <button class="btn btn-primary">
-                            <Monitor color="white"/>Monitoramento
-                        </button>
-                    </RouterLink>
-                </li>
-                <li>
-                    <RouterLink to="/Utilizadores" class="routes">
-                        <button class="btn btn-primary">
-                            <Users color="white"/>Utilizadores
-                        </button>
-                    </RouterLink>
-                </li>
-                <li>
-                    <RouterLink to="/Auditorias" class="routes">
-                        <button class="btn btn-primary">
-                            <NotebookPen color="white"/>Auditorias
-                        </button>
-                    </RouterLink>
-                </li>
-                <li>
-                    <RouterLink to="/Materiais" class="routes">
-                        <button class="btn btn-primary">
-                            <Anvil color="white"/>Materiais
-                        </button>
-                    </RouterLink>
-                </li>
-            </ul>
-        </nav>
-        <div class="navbar-logout">
-            <button id="logout" class="btn btn-primary">
-                Sair
-                <LogOut color="white"/>
-            </button> 
-        </div>
+            <div class="navbar-logo">
+                <img src="../assets/logo.svg" alt="Logo" class="logo" width="145px" height="55px"/>
+            </div>
+            <div class="navbar-user">
+                <button class="btn btn-secondary">
+                    User <User color="white"/>
+                </button>
+            </div>
+            <nav>
+                <ul>
+                    <li>
+                        <RouterLink to="/" class="routes">
+                            <button class="btn btn-primary">
+                                <LayoutDashboard color="white"/>Dashboard</button>
+                        </RouterLink>
+                    </li>
+                    <li>
+                        <RouterLink to="/Monitoramento" class="routes">
+                            <button class="btn btn-primary">
+                                <Monitor color="white"/>Monitoramento
+                            </button>
+                        </RouterLink>
+                    </li>
+                    <li>
+                        <RouterLink to="/Utilizadores" class="routes">
+                            <button class="btn btn-primary">
+                                <Users color="white"/>Utilizadores
+                            </button>
+                        </RouterLink>
+                    </li>
+                    <li>
+                        <RouterLink to="/Auditorias" class="routes">
+                            <button class="btn btn-primary">
+                                <NotebookPen color="white"/>Auditorias
+                            </button>
+                        </RouterLink>
+                    </li>
+                    <li>
+                        <RouterLink to="/Materiais" class="routes">
+                            <button class="btn btn-primary">
+                                <Anvil color="white"/>Materiais
+                            </button>
+                        </RouterLink>
+                    </li>
+                </ul>
+            </nav>
+            <div class="navbar-logout">
+                <button id="logout" class="btn btn-primary">
+                    Sair
+                    <LogOut color="white"/>
+                </button> 
+            </div>
     </div>
     </div>
 </template>
@@ -211,6 +211,25 @@ import {RouterLink } from 'vue-router';
         max-height: 100dvh; */
         max-width: 350px;
 
+    }
+    @media only screen and (max-height: 600px) {
+        .navbar-buttons{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding-block: 2rem;
+
+        background-color: #734414;
+        height: 50rem;
+        max-height: 100dvh;
+        /* min-height: fit-content;
+        max-height: 100dvh; */
+        max-width: 350px;
+        }
+        ul{
+            gap: 0.5rem;
+        }
     }
 
     .navbar-logo{

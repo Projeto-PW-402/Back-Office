@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class="container">
+    <div class="stats-container">
         <div class="title">Estatística</div>
         <div class="container blocks">
             <div class="row">
@@ -30,7 +30,7 @@
 </template>
 
 <style scoped>
-    .container{
+    .stats-container{
         min-width: 335px;
         min-height: 154px;
         height: 444px;
@@ -39,7 +39,18 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 18px;
+        color: black;
+        /* background-color: tomato; */
+        gap: 20px;
+    }
+    .container{
+        min-width: 335px;
+        min-height: 154px;
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         color: black;
         /* background-color: tomato; */
     }
