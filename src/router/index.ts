@@ -25,6 +25,7 @@ const routes = [
         path: '/Auditorias',
         name: 'Auditorias',
         component : () => import('../pages/Auditorias.vue')
+
     },
 ]
 
