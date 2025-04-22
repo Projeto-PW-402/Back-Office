@@ -23,28 +23,28 @@ import {RouterLink } from 'vue-router';
                         </RouterLink>
                     </li>
                     <li>
-                        <RouterLink to="/Monitoramento" class="routes">
+                        <RouterLink to="/monitoramento" class="routes">
                             <button class="btn btn-primary">
                                 <Monitor color="white"/>Monitoramento
                             </button>
                         </RouterLink>
                     </li>
                     <li>
-                        <RouterLink to="/Utilizadores" class="routes">
+                        <RouterLink to="/users" class="routes">
                             <button class="btn btn-primary">
                                 <Users color="white"/>Utilizadores
                             </button>
                         </RouterLink>
                     </li>
                     <li>
-                        <RouterLink to="/Auditorias" class="routes">
+                        <RouterLink to="/auditorias/pedidos" class="routes">
                             <button class="btn btn-primary">
                                 <NotebookPen color="white"/>Auditorias
                             </button>
                         </RouterLink>
                     </li>
                     <li>
-                        <RouterLink to="/Materiais" class="routes">
+                        <RouterLink to="/materiais" class="routes">
                             <button class="btn btn-primary">
                                 <Anvil color="white"/>Materiais
                             </button>
@@ -75,7 +75,7 @@ import {RouterLink } from 'vue-router';
         min-height: fit-content;
         max-height: 100dvh;
         min-width: 300px;
-        width: 20dvw;
+        max-width: 300px;
     }
 
     .navbar-buttons{
@@ -183,7 +183,7 @@ import {RouterLink } from 'vue-router';
     }
     #logout:active{
         /* Button moving fix */
-        height: calc(3.5rem - .5px);
+
         padding-left: 12px;
 
         background-color: rgba(217, 217, 217, 15%);
