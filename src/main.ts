@@ -12,4 +12,5 @@ const app = createApp(App)
 app.use(VueApexCharts)
 app.use(router)
 app.use(createPinia())
+
 app.mount('#app')

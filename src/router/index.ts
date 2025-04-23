@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
+
   {
     path: '/',
     name: 'Dashboard',
     component: () => import('../pages/Dashboard.vue'),
+    alias: '/dashboard',
   },
   {
     path: '/monitoramento',
@@ -18,7 +20,7 @@ const routes = [
   },
   {
     path: '/users',
-    name: 'Utilizadores',
+    name: 'Users',
     component: () => import('../pages/Utilizadores.vue'),
   },
   {

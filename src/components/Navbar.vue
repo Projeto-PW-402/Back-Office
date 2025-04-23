@@ -1,260 +1,309 @@
 <script setup lang="ts">
-import {LogOut, User, LayoutDashboard,Monitor,Users,NotebookPen,Anvil} from 'lucide-vue-next';
-import {RouterLink } from 'vue-router';
+import { LogOut, User, LayoutDashboard, Monitor, Users, NotebookPen, Anvil } from 'lucide-vue-next'
+import { RouterLink } from 'vue-router'
+
+const props = defineProps<{
+  page: number
+}>()
 </script>
 
 <template>
-    <div class="navbar-container">
-        <div class="navbar-buttons">
-            <div class="navbar-logo">
-                <img src="../assets/logo.svg" alt="Logo" class="logo" width="145px" height="55px"/>
-            </div>
-            <div class="navbar-user">
-                <button class="btn btn-secondary">
-                    User <User color="white"/>
-                </button>
-            </div>
-            <nav>
-                <ul>
-                    <li>
-                        <RouterLink to="/" class="routes">
-                            <button class="btn btn-primary">
-                                <LayoutDashboard color="white"/>Dashboard</button>
-                        </RouterLink>
-                    </li>
-                    <li>
-                        <RouterLink to="/monitoramento" class="routes">
-                            <button class="btn btn-primary">
-                                <Monitor color="white"/>Monitoramento
-                            </button>
-                        </RouterLink>
-                    </li>
-                    <li>
-                        <RouterLink to="/users" class="routes">
-                            <button class="btn btn-primary">
-                                <Users color="white"/>Utilizadores
-                            </button>
-                        </RouterLink>
-                    </li>
-                    <li>
-                        <RouterLink to="/auditorias/pedidos" class="routes">
-                            <button class="btn btn-primary">
-                                <NotebookPen color="white"/>Auditorias
-                            </button>
-                        </RouterLink>
-                    </li>
-                    <li>
-                        <RouterLink to="/materiais" class="routes">
-                            <button class="btn btn-primary">
-                                <Anvil color="white"/>Materiais
-                            </button>
-                        </RouterLink>
-                    </li>
-                </ul>
-            </nav>
-            <div class="navbar-logout">
-                <button id="logout" class="btn btn-primary">
-                    Sair
-                    <LogOut color="white"/>
-                </button> 
-            </div>
+  <div class="navbar-container">
+    <div class="navbar-buttons">
+      <div class="navbar-logo">
+        <img src="../assets/logo.svg" alt="Logo" class="logo" width="145px" height="55px" />
+      </div>
+      <div class="navbar-user">
+        <button class="btn btn-secondary">User <User color="white" /></button>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <RouterLink to="/dashboard" class="routes">
+              <button
+                class="btn btn-primary"
+                :style="
+                  props.page === 0
+                    ? { color: '#fff', border: '2px solid white', paddingLeft: '10px' }
+                    : {}
+                "
+              >
+                <LayoutDashboard
+                  class="icons"
+                  :style="{ color: props.page === 0 ? '#fff' : '#ddd' }"
+                />
+                Dashboard
+              </button>
+            </RouterLink>
+          </li>
+
+          <li>
+            <RouterLink to="/monitoramento" class="routes">
+              <button
+                class="btn btn-primary"
+                :style="
+                  props.page === 1
+                    ? { color: '#fff', border: '2px solid white', paddingLeft: '10px' }
+                    : {}
+                "
+              >
+                <Monitor class="icons" :style="{ color: props.page === 1 ? '#fff' : '#ddd' }" />
+                Monitoramento
+              </button>
+            </RouterLink>
+          </li>
+
+          <li>
+            <RouterLink to="/users" class="routes">
+              <button
+                class="btn btn-primary"
+                :style="
+                  props.page === 2
+                    ? { color: '#fff', border: '2px solid white', paddingLeft: '10px' }
+                    : {}
+                "
+              >
+                <Users class="icons" :style="{ color: props.page === 2 ? '#fff' : '#ddd' }" />
+                Utilizadores
+              </button>
+            </RouterLink>
+          </li>
+
+          <li>
+            <RouterLink to="/auditorias/pedidos" class="routes">
+              <button
+                class="btn btn-primary"
+                :style="
+                  props.page === 3
+                    ? { color: '#fff', border: '2px solid white', paddingLeft: '10px' }
+                    : {}
+                "
+              >
+                <NotebookPen class="icons" :style="{ color: props.page === 3 ? '#fff' : '#ddd' }" />
+                Auditorias
+              </button>
+            </RouterLink>
+          </li>
+
+          <li>
+            <RouterLink to="/materiais" class="routes">
+              <button
+                class="btn btn-primary"
+                :style="
+                  props.page === 4
+                    ? { color: '#fff', border: '2px solid white', paddingLeft: '10px' }
+                    : {}
+                "
+              >
+                <Anvil class="icons" :style="{ color: props.page === 4 ? '#fff' : '#ddd' }" />
+                Materiais
+              </button>
+            </RouterLink>
+          </li>
+        </ul>
+      </nav>
+      <div class="navbar-logout">
+        <button id="logout" class="btn btn-primary">
+          Sair
+          <LogOut class="icons" />
+        </button>
+      </div>
     </div>
-    </div>
+  </div>
 </template>
 
 <style scoped>
-    .navbar-container{
-        position:static;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+.navbar-container {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-        background-color: #734414;
-        height: 100vh;
-        min-height: fit-content;
-        max-height: 100dvh;
-        min-width: 300px;
-        max-width: 300px;
-    }
+  background-color: #734414;
+  height: 100vh;
+  min-height: fit-content;
+  max-height: 100dvh;
+  min-width: 300px;
+  max-width: 300px;
+}
 
-    .navbar-buttons{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        padding-block: 2rem;
+.navbar-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 2rem;
 
-        background-color: #734414;
-        height: 50rem;
-        /* min-height: fit-content;
+  background-color: #734414;
+  height: 50rem;
+  /* min-height: fit-content;
         max-height: 100dvh; */
-        max-width: 350px;
+  max-width: 350px;
+}
 
-    }
+.navbar-logo {
+  display: flex;
+  width: fit-content;
+  height: fit-content;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+.navbar-user {
+  width: 15rem;
+}
 
-    .navbar-logo{
-        display: flex;
-        width: fit-content;
-        height: fit-content;
-        justify-content:center;
-        align-items:center;
-        flex-shrink: 0;
-    }
-    .navbar-user{
-        width: 15rem;
-    }
+ul {
+  list-style: none;
 
-    ul{
-        list-style: none;
+  width: 15rem;
 
-        width: 15rem;
-        
-        display: flex;
-        flex-direction: column;
-        gap: 1.875rem;
-        padding: 0;
-    }
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+  padding: 0;
+}
 
-    li{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.icons {
+  color: #ddd;
+}
+.btn-primary {
+  width: 100%;
+  height: 3.5rem;
 
-    .btn-primary{
-        width: 100%;
-        height: 3.5rem;
+  background-color: rgba(217, 217, 217, 15%);
+  border: none;
+  display: flex;
+  justify-content: baseline;
+  padding-left: 12px;
+  align-items: center;
+  gap: 12px;
 
-        background-color: rgba(217, 217, 217, 15%);
-        border: none;
-        display: flex;
-        justify-content:baseline;
-        padding-left: 12px;
-        align-items: center;
-        gap: 12px;
+  font-family: Inter;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ddd;
+}
+.btn-primary:active {
+  padding-left: 10px;
 
-        font-family: Inter;
-        font-size: 18px;
-        font-weight: 600;
-    }
-    .btn-primary:active{
-        padding-left: 10px; 
+  background-color: rgba(217, 217, 217, 15%);
+  border: 2px solid #d7d7d7;
+  color: #fff;
+}
 
-        background-color: rgba(217, 217, 217, 15%);
-        border: 2px solid #d7d7d7;
-        color: #fff;
-    }
+.btn-secondary {
+  width: 100%;
+  height: 58px;
 
-    .btn-secondary{
-        width: 100%;
-        height: 58px;
+  background-color: rgba(217, 217, 217, 15%);
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
 
-        background-color: rgba(217, 217, 217, 15%);
-        border: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 12px;
+  font-family: Inter;
+  font-size: 18px;
+  font-weight: 600;
+}
+.btn-secondary:focus {
+  background-color: rgba(217, 217, 217, 15%);
+  cursor: default;
+}
+.btn-secondary:hover {
+  background-color: rgba(217, 217, 217, 15%);
+  cursor: default;
+}
 
-        font-family: Inter;
-        font-size: 18px;
-        font-weight: 600;
-    }
-    .btn-secondary:focus{
-        background-color: rgba(217, 217, 217, 15%);
-        cursor: default;
-    }
-    .btn-secondary:hover{
-        background-color: rgba(217, 217, 217, 15%);
-        cursor: default;
-    }
+#logout {
+  width: 15rem;
+  height: 3.5rem;
+  background-color: rgba(217, 217, 217, 15%);
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+#logout:active {
+  /* Button moving fix */
 
-    #logout{
-        width:15rem;
-        height: 3.5rem;
-        background-color: rgba(217, 217, 217, 15%);
-        border: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 12px;
+  padding-left: 12px;
 
-    }
-    #logout:active{
-        /* Button moving fix */
+  background-color: rgba(217, 217, 217, 15%);
+  border: 2px solid #d7d7d7;
+  color: #fff;
+}
 
-        padding-left: 12px;
+.routes {
+  text-decoration: none;
+  width: 100%;
+}
 
-        background-color: rgba(217, 217, 217, 15%);
-        border: 2px solid #d7d7d7;
-        color: #fff;
-    }
+@media only screen and (min-width: 1024px) {
+  .navbar-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 2rem;
 
-    .routes{
-        text-decoration: none;
-        width: 100%;
-    }
-
-    @media only screen and (min-width: 1024px) {
-        .navbar-buttons{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        padding-block: 2rem;
-
-        background-color: #734414;
-        height: 50rem;
-        max-height: 100dvh;
-        /* min-height: fit-content;
+    background-color: #734414;
+    height: 50rem;
+    max-height: 100dvh;
+    /* min-height: fit-content;
         max-height: 100dvh; */
-        max-width: 350px;
+    max-width: 350px;
+  }
+  @media only screen and (max-height: 600px) {
+    .navbar-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding-block: 2rem;
 
-    }
-    @media only screen and (max-height: 600px) {
-        .navbar-buttons{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        padding-block: 2rem;
-
-        background-color: #734414;
-        height: 50rem;
-        max-height: 100dvh;
-        /* min-height: fit-content;
+      background-color: #734414;
+      height: 50rem;
+      max-height: 100dvh;
+      /* min-height: fit-content;
         max-height: 100dvh; */
-        max-width: 350px;
-        }
-        ul{
-            gap: 0.5rem;
-        }
+      max-width: 350px;
     }
+    ul {
+      gap: 0.5rem;
+    }
+  }
 
-    .navbar-logo{
-        display: flex;
-        width: fit-content;
-        height: fit-content;
-        justify-content:center;
-        align-items:center;
-       
-    }
-    .btn-primary{
-        width: 100%;
-        height: 3.5rem;
+  .navbar-logo {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    justify-content: center;
+    align-items: center;
+  }
+  .btn-primary {
+    width: 100%;
+    height: 3.5rem;
 
-        background-color: rgba(217, 217, 217, 15%);
-        border: none;
-        display: flex;
-        justify-content:baseline;
-        padding-left: 12px;
-        align-items: center;
-        gap: 12px;
+    background-color: rgba(217, 217, 217, 15%);
+    border: none;
+    display: flex;
+    justify-content: baseline;
+    padding-left: 12px;
+    align-items: center;
+    gap: 12px;
 
-        font-family: Inter;
-        font-size: 18px;
-        font-weight: 600;
-    }
-    }
+    font-family: Inter;
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
 </style>

@@ -11,20 +11,20 @@ const route = useRoute();
 
 
 const selectAll = computed(() => {
-    return selected.value.length === users.value.length;
+    return selected.value.length === pedidos.value.length;
 });
 
 const toggleSelectAll = () => {
     if (selectAll.value) {
         selected.value = [];
     } else {
-        selected.value = users.value.map(user => user.id);
+        selected.value = pedidos.value.map(pedido => pedido.id);
     }
 };
 
-const paginatedUsers = computed(() => {
+const paginatedpedidos = computed(() => {
     const start = (currentPage.value - 1) * perPage.value;
-    return users.value.slice(start, start + perPage.value);
+    return pedidos.value.slice(start, start + perPage.value);
 });
 
 const selectedPage = computed(() => {
@@ -33,7 +33,7 @@ const selectedPage = computed(() => {
     return parseInt(pageStr || '1')
 })
 
-const users = ref([
+const pedidos = ref([
     { id: 1, nome: 'João Silva', local: 'Lisboa', data: '2025-04-15' },
     { id: 2, nome: 'Ricardo Silva', local: 'Braga', data: '2025-04-6' },
     { id: 3, nome: 'Ana Costa', local: 'Porto', data: '2025-04-10' },
@@ -61,7 +61,7 @@ const users = ref([
     { id: 25, nome: 'Joana Martins', local: 'Faro', data: '2025-04-09' }
 ])
 
-const totalPages = computed(() => Math.ceil(users.value.length / perPage.value))
+const totalPages = computed(() => Math.ceil(pedidos.value.length / perPage.value))
 const currentPage = ref(selectedPage.value)
 
 const visiblePages = computed(() => {
@@ -92,7 +92,7 @@ watch(selectedPage, (newPage) => {
 
 <template>
     <div class="auditorias-container">
-        <Navbar />
+        <Navbar :page="3"/>
         <div class="frame">
             <nav>
                 <div class="sub-navbar-container">
@@ -123,18 +123,18 @@ watch(selectedPage, (newPage) => {
                             </tr>
                         </thead>
                         <tbody class="text-center align-middle">
-                            <tr v-for="user in paginatedUsers" :key="user.id">
-                                <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
-                                    <input type="checkbox" class="form-check-input" :value="user.id"
+                            <tr v-for="pedido in paginatedpedidos" :key="pedido.id">
+                                <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">
+                                    <input type="checkbox" class="form-check-input" :value="pedido.id"
                                         v-model="selected" />
                                 </td>
-                                <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">{{
-                                    user.nome }}</td>
-                                <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">{{
-                                    user.local }}</td>
-                                <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">{{
-                                    user.data }}</td>
-                                <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
+                                <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">{{
+                                    pedido.nome }}</td>
+                                <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">{{
+                                    pedido.local }}</td>
+                                <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">{{
+                                    pedido.data }}</td>
+                                <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">
                                     <button class="actions" style="color:green;">
                                         <Check width="20px" height="20px" />
                                     </button>
@@ -145,7 +145,7 @@ watch(selectedPage, (newPage) => {
                                         <Info width="20px" height="20px" />
                                     </button>
                                 </td>
-                                <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
+                                <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">
                                     <button class="download">
                                         Download
                                         <FileText width="20px" height="20px" />
@@ -216,12 +216,6 @@ watch(selectedPage, (newPage) => {
                         </li>
                     </ul>
                 </nav>
-                <!-- <BVPagination
-                    v-model="currentPage"
-                    :total-rows="totalRows"
-                    :per-page="perPage"
-                    aria-controls="pedidos-table"
-                /> -->
                 <!-- Botão Adicionar -->
                 <div class="text-end mt-3">
                     <button class="btn btn-warning" id="adicionar">Adicionar</button>
@@ -233,7 +227,7 @@ watch(selectedPage, (newPage) => {
 
 <style scoped>
 .frame {
-    user-select: none;
+    pedido-select: none;
     width: 100%;
     max-height: 100dvh;
     display: flex;

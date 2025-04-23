@@ -6,7 +6,7 @@ import ChartAuditorias from '../components/ChartAuditorias.vue';
 
 <template>
     <div class="dashboard-container">
-        <Navbar />
+        <Navbar :page="0"/>
         <div class="container information-container">
             <div class="row">
                 <Estatistica id="estatistica" class="col-sm-"/>
