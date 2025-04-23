@@ -157,7 +157,7 @@ watch(selectedPage, (newPage) => {
                 </div>
 
                 <!-- Paginação -->
-                <nav class="d-flex justify-content-center mt-4">
+                <nav class="pagination">
                     <ul class="pagination pagination-sm mb-0">
                         <!-- Previous Button -->
                         <li v-if="currentPage != 1" class="page-item">
@@ -165,7 +165,7 @@ watch(selectedPage, (newPage) => {
                                 path: '/auditorias/pedidos',
                                 query: { page: currentPage - 1 }
                             }" class="page-link">
-                                <span class="page-link" id="prev">&lt;Prev</span>
+                                <span class="page-link" id="prev">&lt;&lt;Prev</span>
                             </router-link>
                         </li>
                         <li v-else class="page-item disabled">
@@ -173,7 +173,7 @@ watch(selectedPage, (newPage) => {
                                 path: '/auditorias/pedidos',
                                 query: { page: currentPage - 1 }
                             }" class="page-link">
-                                <span class="page-link" id="prev">&lt;Prev</span>
+                                <span class="page-link" id="prev">&lt;&lt;Prev</span>
                             </router-link>
                         </li>
                      <!-- Numbers -->
@@ -184,12 +184,12 @@ watch(selectedPage, (newPage) => {
                             class="page-link disabled"> First                        
                         </router-link>
                         <li v-for="page in visiblePages" :key="page"
-                            :class="['page-item active', { active: page === currentPage }]">
+                            :class="['page-item', { active: page === currentPage }]">
                             <router-link v-if="page !== currentPage"
                                 :to="{ path: '/auditorias/pedidos', query: { page } }" class="page-link">
                                 {{ page }}
                             </router-link>
-                            <span v-else class="page-link">{{ page }}</span>
+                            <span v-else class="page-link active">{{ page }}</span>
                         </li>
                         <router-link v-if="currentPage !== totalPages" :to="{ path: '/auditorias/pedidos', query: { page: totalPages } }"
                             class="page-link"> Last
@@ -203,7 +203,7 @@ watch(selectedPage, (newPage) => {
                                 path: '/auditorias/pedidos',
                                 query: { page: currentPage + 1 }
                             }" class="page-link">
-                                <span class="page-link" id="next">Next ></span>
+                                <span class="page-link" id="next">Next >></span>
                             </router-link>
                         </li>
                         <li v-else class="page-item">
@@ -211,7 +211,7 @@ watch(selectedPage, (newPage) => {
                                 path: '/auditorias/pedidos',
                                 query: { page: currentPage + 1 }
                             }" class="page-link">
-                                <span class="page-link" id="next">Next ></span>
+                                <span class="page-link" id="next">Next >></span>
                             </router-link>
                         </li>
                     </ul>
@@ -342,9 +342,7 @@ input[type="checkbox"]:checked {
     border-color: transparent;
 }
 
-.active{
-    color: lightblue;
-}
+
 
 ul {
     font-weight: 500;
@@ -353,6 +351,13 @@ ul {
     gap: 2px;
 }
 
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
 .page-link {
     font-family: Poppins, sans-serif;
     font-weight: 500;
@@ -361,6 +366,14 @@ ul {
     background: none;
     color: black;
     gap: 10px;
+}
+.active{
+    color: lightblue;
+    font-weight: 600;
+    font-size: 20px;
+}
+.disabled{
+    opacity: 0.5;
 }
 
 #prev {
