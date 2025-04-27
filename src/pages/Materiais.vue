@@ -2,12 +2,14 @@
 import { Pencil, Trash2Icon, X } from 'lucide-vue-next';
 import Navbar from '../components/Navbar.vue'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import NewMaterial from '@/subpages/NewMaterial.vue';
 
 const options = [];
 const selected = ref<number[]>([]);
 const perPage = ref(10);
 const route = useRoute();
+const router = useRouter();
 
 const w_screen = ref(window.innerWidth)
 const h_screen = ref(window.innerHeight)
@@ -121,10 +123,37 @@ watch(selectedPage, (newPage) => {
   currentPage.value = newPage
   console.log('Current page:', newPage)
 })
+
+
+
+const isMenuEnabled = computed(() => {
+  const add = route.query.add
+  if (add === undefined || add === 'false') {
+    return false
+  }else {
+    return true
+  }
+})
+
+const addMaterial = ref(false)
+const isModalActive = ref(isMenuEnabled.value)
+console.log('isModalActive:', isModalActive.value)
+
+watch(() => route.query.add, (newAdd) => {
+  isModalActive.value = newAdd !== 'false' && newAdd !== undefined;
+  
+  });
+
+function handleClick(){
+  addMaterial.value = true
+  isModalActive.value = true
+  router.push({ path: '/materiais', query: { add: 'true' } });
+}
+
 </script>
 <template>
-  <div class="materiais-container">
-    <Navbar :page="4"/>
+  <div class="materiais-container" :style="{ filter: isModalActive ? 'blur(5px)' : 'blur(0)'  }">
+    <Navbar :page="4" :disable=isModalActive />
     <div class="container-fluid p-4 bg-light min-vh-100">
       <h2 class="mb-4 fw-bold" id="title">Materiais</h2>
       <div class="table-responsive bg-white ">
@@ -230,10 +259,11 @@ watch(selectedPage, (newPage) => {
 
       <!-- Botão Adicionar -->
       <div class="text-end mt-3">
-        <button class="btn btn-warning" id="adicionar">Adicionar</button>
+        <button class="btn btn-warning" id="adicionar" @click=handleClick >Adicionar</button>
       </div>
     </div>
   </div>
+  <NewMaterial :visible="isModalActive"/>
 </template>
 
 <style scoped>

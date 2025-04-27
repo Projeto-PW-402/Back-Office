@@ -2,13 +2,14 @@
 import { Plus, Trash2Icon } from 'lucide-vue-next'
 import Navbar from '../components/Navbar.vue'
 import { computed, h, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import NewUser from '@/subpages/NewUser.vue'
 
 const options = []
 const selected = ref<number[]>([])
 const perPage = ref(10)
 const route = useRoute()
+const router = useRouter()
 
 const w_screen = ref(window.innerWidth)
 const h_screen = ref(window.innerHeight)
@@ -79,15 +80,18 @@ const isMenuEnabled = computed(() => {
   }
 })
 
-const isAddUserEnabled = ref(isMenuEnabled.value)
+
+const addUser = ref(false)
+const isModalActive = ref(isMenuEnabled.value)
 
 watch(() => route.query.add, (newAdd) => {
-    isAddUserEnabled.value = newAdd !== 'false' && newAdd !== undefined;
+  isModalActive.value = newAdd !== 'false' && newAdd !== undefined;
   });
 
 function handleClick(){
   addUser.value = true
-  isAddUserEnabled.value = true
+  isModalActive.value = true
+  router.push({ path: '/users', query: { add: 'true' } });
 }
 
 
@@ -323,13 +327,11 @@ onMounted(() => {
 })
 
 
-const addUser = ref(false)
-console.log('addUser:', addUser.value)
 </script>
 
 <template>
-  <div class="main-container" :style="{ filter: isAddUserEnabled ? 'blur(5px)' : 'blur(0)'  }">
-    <Navbar :page="2" />
+  <div class="main-container" :style="{ filter: isModalActive ? 'blur(5px)' : 'blur(0)'  }">
+    <Navbar :page="2" :disable=isModalActive />
     <div class="container-fluid p-4 bg-light min-vh-100">
       <h2 class="mb-4 fw-bold" id="title">Users</h2>
       <div class="table-responsive bg-white">
@@ -497,20 +499,12 @@ console.log('addUser:', addUser.value)
 
       <!-- Botão Adicionar -->
       <div class="text-end mt-3">
-        <router-link
-              :to="{
-                path: '/users',
-                query: { add: 'true' },
-              }"
-              class="page-link"
-            >
         <button class="btn btn-warning" id="adicionar" @click=handleClick >Adicionar</button>
-      </router-link>
       </div>
       
     </div>
   </div>
-  <NewUser :visible="isAddUserEnabled" />
+  <NewUser :visible="isModalActive" />
 </template>
 
 <style scoped>

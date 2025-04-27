@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 
 const props = defineProps<{
   page: number
+  disable?: boolean
 }>()
 </script>
 
@@ -19,7 +20,7 @@ const props = defineProps<{
       <nav>
         <ul>
           <li>
-            <RouterLink to="/dashboard" class="routes">
+            <RouterLink to="/dashboard" class="routes" :style="{ pointerEvents: props.disable ? 'none' : 'auto' }">
               <button
                 class="btn btn-primary"
                 :style="
@@ -38,7 +39,7 @@ const props = defineProps<{
           </li>
 
           <li>
-            <RouterLink to="/monitoramento" class="routes">
+            <RouterLink to="/monitoramento" class="routes" :style="{ pointerEvents: props.disable ? 'none' : 'auto' }">
               <button
                 class="btn btn-primary"
                 :style="
@@ -54,7 +55,7 @@ const props = defineProps<{
           </li>
 
           <li>
-            <RouterLink to="/users" class="routes">
+            <RouterLink to="/users" class="routes" :style="{ pointerEvents: props.disable ? 'none' : 'auto' }">
               <button
                 class="btn btn-primary"
                 :style="
@@ -70,7 +71,7 @@ const props = defineProps<{
           </li>
 
           <li>
-            <RouterLink to="/auditorias/pedidos" class="routes">
+            <RouterLink to="/auditorias/pedidos" class="routes" :style="{ pointerEvents: props.disable ? 'none' : 'auto' }">
               <button
                 class="btn btn-primary"
                 :style="
@@ -86,7 +87,7 @@ const props = defineProps<{
           </li>
 
           <li>
-            <RouterLink to="/materiais" class="routes">
+            <RouterLink to="/materiais" class="routes" :style="{ pointerEvents: props.disable ? 'none' : 'auto' }">
               <button
                 class="btn btn-primary"
                 :style="
@@ -103,7 +104,7 @@ const props = defineProps<{
         </ul>
       </nav>
       <div class="navbar-logout">
-        <button id="logout" class="btn btn-primary">
+        <button id="logout" class="btn btn-primary" :disabled="props.disable">
           Sair
           <LogOut class="icons" />
         </button>
