@@ -127,8 +127,19 @@ watch(selectedPage, (newPage) => {
     <div class="auditorias-container">
         <Navbar :page="3"/>
         <div class="frame">
-            <h2 class="p-4 fw-bold title">Auditorias</h2>
-            <div class="container-fluid bg-light" id="table-container">
+            <nav>
+                <div class="sub-navbar-container">
+                    <ul class="sub-navbar-list">
+                        <li class="sub-navbar-elements">
+                            <div class="btn btn-warning sub-navbar-buttons">Pedidos</div>
+                        </li>
+                        <li class="sub-navbar-elements">
+                            <div class="btn btn-warning sub-navbar-buttons">Criar Auditoria</div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="container-fluid p-4 bg-light" id="table-container">
                 <div class="table-responsive bg-white ">
                     <table class="table  mb-0">
                         <thead class="text-center align-middle">
@@ -238,6 +249,10 @@ watch(selectedPage, (newPage) => {
                         </li>
                     </ul>
                 </nav>
+                <!-- Botão Adicionar -->
+                <div class="text-end mt-3">
+                    <button class="btn btn-warning" id="adicionar">Adicionar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -252,9 +267,12 @@ watch(selectedPage, (newPage) => {
     flex-direction: column;
 }
 
-.title {
-  font-family: Poppins, sans-serif;
-  font-weight: 600;
+.sub-navbar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 125px;
+    background-color: #825A32;
 }
 
 .sub-navbar-list {
@@ -323,11 +341,6 @@ tbody {
     font-weight: 500;
     margin-inline: 10px;
     width: 100%;
-    /* display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px; */
 }
 
 td {
@@ -338,7 +351,6 @@ td {
     font-weight: 500;
     margin-inline: 10px;
     width: 100%;
-    padding-bottom: 15px;
 }
 
 
@@ -356,6 +368,8 @@ input[type="checkbox"]:checked {
     outline: none;
     border-color: transparent;
 }
+
+
 
 ul {
     font-weight: 500;

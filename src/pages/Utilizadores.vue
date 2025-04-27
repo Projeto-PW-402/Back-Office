@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Plus, Trash2Icon } from 'lucide-vue-next'
 import Navbar from '../components/Navbar.vue'
-import { computed, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, h, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import NewUser from '@/subpages/NewUser.vue'
 
@@ -22,8 +22,8 @@ function updateSize() {
 function sizePerWindow(newHeight: number) {
   if (newHeight < 650) {
     perPage.value = 2
-  }else if (newHeight < 864) {
-    perPage.value = 5
+  }else if (newHeight < 864){
+    perPage.value = 6  
   }
   else if (newHeight < 956) {
     perPage.value = 7
@@ -328,7 +328,7 @@ onMounted(() => {
               <th scope="col">Ação</th>
             </tr>
           </thead>
-          <tbody class="text-center align-middle" >
+          <tbody class="text-center" >
             <tr v-for="user in paginatedUsers" :key="user.id">
               <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
                 <input
@@ -503,7 +503,7 @@ table {
 tr {
   display: flex;
   width: 100%;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -531,9 +531,14 @@ tbody {
   border-radius: 0%;
   font-family: Poppins, sans-serif;
   font-weight: 500;
-  width: 100%;
-  margin-inline: 10px;
+  /* margin-inline: 10px; */
+  width: auto;
   /* background-color: red; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
 
 td{
@@ -543,12 +548,10 @@ td{
   font-family: Poppins, sans-serif;
   font-weight: 500;
   margin-inline: 10px;
-
   width: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding-bottom: 15px;
+  justify-content: center;
 }
 
 input[type='checkbox'] {
@@ -604,7 +607,7 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: .5rem;
+  gap: 20px;
 }
 
 .actions {
@@ -632,14 +635,6 @@ ul {
   width: 10rem;
   height: 3rem;
   background-color: #d7a871;
-  transition:all 0.2s cubic-bezier(0.47, 0, 0.745, 0.715);
-}
-
-#adicionar:hover {
-  background-color: #d7a871;
-  color: white;
-  cursor: pointer;
-  transform: scale(1.05);
 }
 
 </style>
