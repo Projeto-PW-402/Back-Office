@@ -20,10 +20,13 @@ function updateSize() {
 }
 
 function sizePerWindow(newHeight: number) {
-  if (newHeight < 864) {
-    perPage.value = 6
-  } else if (newHeight < 956) {
-    perPage.value = 8
+  if (newHeight < 650) {
+    perPage.value = 2
+  }else if (newHeight < 864) {
+    perPage.value = 5
+  }
+  else if (newHeight < 956) {
+    perPage.value = 7
   } else {
     perPage.value = 10
   }
@@ -39,6 +42,7 @@ onUnmounted(() => {
 
 watch(h_screen, (newHeight) => {
   sizePerWindow(newHeight)
+  h_screen.value = newHeight
 })
 
 const selectAll = computed(() => {
@@ -324,7 +328,7 @@ onMounted(() => {
               <th scope="col">Ação</th>
             </tr>
           </thead>
-          <tbody class="text-center" >
+          <tbody class="text-center align-middle" >
             <tr v-for="user in paginatedUsers" :key="user.id">
               <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
                 <input
@@ -470,7 +474,7 @@ onMounted(() => {
       <div class="text-end mt-3">
         <button class="btn btn-warning" id="adicionar">Adicionar</button>
       </div>
-      <NewUser/>
+      <NewUser :visible="false"/>
     </div>
   </div>
 </template>
@@ -499,7 +503,7 @@ table {
 tr {
   display: flex;
   width: 100%;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
@@ -527,14 +531,9 @@ tbody {
   border-radius: 0%;
   font-family: Poppins, sans-serif;
   font-weight: 500;
-  /* margin-inline: 10px; */
-  width: auto;
+  width: 100%;
+  margin-inline: 10px;
   /* background-color: red; */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
 }
 
 td{
@@ -544,10 +543,12 @@ td{
   font-family: Poppins, sans-serif;
   font-weight: 500;
   margin-inline: 10px;
+
   width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  padding-bottom: 15px;
 }
 
 input[type='checkbox'] {
@@ -603,7 +604,7 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: .5rem;
 }
 
 .actions {
@@ -631,6 +632,14 @@ ul {
   width: 10rem;
   height: 3rem;
   background-color: #d7a871;
+  transition:all 0.2s cubic-bezier(0.47, 0, 0.745, 0.715);
+}
+
+#adicionar:hover {
+  background-color: #d7a871;
+  color: white;
+  cursor: pointer;
+  transform: scale(1.05);
 }
 
 </style>
