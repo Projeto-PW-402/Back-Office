@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Pencil, Trash2Icon, X } from 'lucide-vue-next';
 import Navbar from '../components/Navbar.vue'
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const options = [];
@@ -9,6 +9,38 @@ const selected = ref<number[]>([]);
 const perPage = ref(10);
 const route = useRoute();
 
+const w_screen = ref(window.innerWidth)
+const h_screen = ref(window.innerHeight)
+sizePerWindow(h_screen.value)
+
+function updateSize() {
+  w_screen.value = window.innerWidth
+  h_screen.value = window.innerHeight
+}
+
+function sizePerWindow(newHeight: number) {
+  if (newHeight < 864) {
+    perPage.value = 5
+  }
+  else if (newHeight < 956) {
+    perPage.value = 7
+  }
+  else {
+    perPage.value = 10
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('resize', updateSize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateSize)
+})
+
+watch(h_screen, (newHeight) => {
+  sizePerWindow(newHeight)
+})
 
 const selectAll = computed(() => {
   return selected.value.length === materiais.value.length;
