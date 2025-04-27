@@ -373,6 +373,14 @@ ul {
   font-size: 16px;
   width: 10rem;
   height: 3rem;
-  background-color: #D7A871;
+  background-color: #d7a871;
+  transition:all 0.2s cubic-bezier(0.47, 0, 0.745, 0.715);
+}
+
+#adicionar:hover {
+  background-color: #d7a871;
+  color: white;
+  cursor: pointer;
+  transform: scale(1.05);
 }
 </style>

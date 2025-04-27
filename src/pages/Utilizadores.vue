@@ -24,11 +24,13 @@ function sizePerWindow(newHeight: number) {
     perPage.value = 2
   }else if (newHeight < 864){
     perPage.value = 6  
-  }
-  else if (newHeight < 956) {
+  }else if (newHeight < 956){
     perPage.value = 7
-  } else {
+  }
+  else if (newHeight < 1316) {
     perPage.value = 10
+  } else {
+    perPage.value = 17
   }
 }
 
@@ -67,6 +69,28 @@ const selectedPage = computed(() => {
   const pageStr = Array.isArray(page) ? page[0] : page
   return parseInt(pageStr || '1')
 })
+
+const isMenuEnabled = computed(() => {
+  const add = route.query.add
+  if (add === undefined || add === 'false') {
+    return false
+  }else {
+    return true
+  }
+})
+
+const isAddUserEnabled = ref(isMenuEnabled.value)
+
+watch(() => route.query.add, (newAdd) => {
+    isAddUserEnabled.value = newAdd !== 'false' && newAdd !== undefined;
+  });
+
+function handleClick(){
+  addUser.value = true
+  isAddUserEnabled.value = true
+}
+
+
 
 const users = ref([
   {
@@ -299,11 +323,12 @@ onMounted(() => {
 })
 
 
-
+const addUser = ref(false)
+console.log('addUser:', addUser.value)
 </script>
 
 <template>
-  <div class="main-container">
+  <div class="main-container" :style="{ filter: isAddUserEnabled ? 'blur(5px)' : 'blur(0)'  }">
     <Navbar :page="2" />
     <div class="container-fluid p-4 bg-light min-vh-100">
       <h2 class="mb-4 fw-bold" id="title">Users</h2>
@@ -472,11 +497,20 @@ onMounted(() => {
 
       <!-- Botão Adicionar -->
       <div class="text-end mt-3">
-        <button class="btn btn-warning" id="adicionar">Adicionar</button>
+        <router-link
+              :to="{
+                path: '/users',
+                query: { add: 'true' },
+              }"
+              class="page-link"
+            >
+        <button class="btn btn-warning" id="adicionar" @click=handleClick >Adicionar</button>
+      </router-link>
       </div>
-      <NewUser :visible="false"/>
+      
     </div>
   </div>
+  <NewUser :visible="isAddUserEnabled" />
 </template>
 
 <style scoped>
@@ -635,6 +669,14 @@ ul {
   width: 10rem;
   height: 3rem;
   background-color: #d7a871;
+  transition:all 0.2s cubic-bezier(0.47, 0, 0.745, 0.715);
+}
+
+#adicionar:hover {
+  background-color: #d7a871;
+  color: white;
+  cursor: pointer;
+  transform: scale(1.05);
 }
 
 </style>

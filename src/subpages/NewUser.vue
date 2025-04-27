@@ -1,12 +1,31 @@
 <script setup lang="ts">
-    import { UserPlus } from 'lucide-vue-next'
+    import { UserPlus, X } from 'lucide-vue-next'
+    import { ref , watchEffect} from 'vue';
+    import { useRoute , useRouter} from 'vue-router';
     const props = defineProps<{
         visible: boolean
     }>()
+
+    const isVisible = ref(props.visible)
+    const route = useRoute()
+    const router = useRouter()
+
+    watchEffect(() => {
+        // Verificar a query 'add' para controlar a visibilidade do modal
+        const add = route.query.add;
+        isVisible.value = add === 'true';
+    })
+
+    function closeModal() {
+        isVisible.value = false;
+        // Alterar a query na URL para fechar o modal
+        router.push({ path: '/users', query: { add: 'false' } });
+    }
 </script>
 <template>
-  <div class="main-container" :style="{ display: props.visible ? 'flex' : 'none' }">
+  <div class="main-container" :style="{ display: isVisible ? 'flex' : 'none' }">
     <div class="title">Adicionar Utilizador</div>
+    <div class="close" @click=closeModal><X /></div>
     <form>
         <div class="name-container">
             <input type="text" id="name" placeholder="" />
@@ -48,9 +67,10 @@
 <style scoped>
 
 .main-container {
+    user-select: none;
   position: absolute;
   top: calc(50% - 275px);
-  left: calc(50% - 50px);
+  left: calc(50% - 250px);
   width: 500px;
   height: 550px;
   background-color: white;
@@ -58,7 +78,6 @@
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-
   font-family: 'Sofia Sans';
   font-optical-sizing: auto;
 }
@@ -66,6 +85,21 @@
   font-size: 30px;
   font-weight: bold;
   margin: 10px 0px 0px 20px;
+}
+.close{
+    position: absolute;
+    transform: none;
+    top: 20px;
+    left: calc(90% - 5px);
+    transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.close:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+    color: red;
+}
+.close:active{
+    color:rgb(124, 128, 252);
 }
 form {
   display: flex;

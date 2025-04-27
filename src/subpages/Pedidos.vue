@@ -127,19 +127,8 @@ watch(selectedPage, (newPage) => {
     <div class="auditorias-container">
         <Navbar :page="3"/>
         <div class="frame">
-            <nav>
-                <div class="sub-navbar-container">
-                    <ul class="sub-navbar-list">
-                        <li class="sub-navbar-elements">
-                            <div class="btn btn-warning sub-navbar-buttons">Pedidos</div>
-                        </li>
-                        <li class="sub-navbar-elements">
-                            <div class="btn btn-warning sub-navbar-buttons">Criar Auditoria</div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
             <div class="container-fluid p-4 bg-light" id="table-container">
+                <h2 class="mb-4 fw-bold" id="title">Auditorias</h2>
                 <div class="table-responsive bg-white ">
                     <table class="table  mb-0">
                         <thead class="text-center align-middle">
@@ -249,10 +238,6 @@ watch(selectedPage, (newPage) => {
                         </li>
                     </ul>
                 </nav>
-                <!-- Botão Adicionar -->
-                <div class="text-end mt-3">
-                    <button class="btn btn-warning" id="adicionar">Adicionar</button>
-                </div>
             </div>
         </div>
     </div>
@@ -411,14 +396,6 @@ ul {
     margin-left: 10px;
 }
 
-#adicionar {
-    font-family: Poppins, sans-serif;
-    font-weight: 500;
-    font-size: 16px;
-    width: 10rem;
-    height: 3rem;
-    background-color: #D7A871;
-}
 
 .download {
     display: flex;
