@@ -1,9 +1,23 @@
 <script setup lang="ts">
 import Navbar from '@/components/Navbar.vue'
-import { ref } from 'vue'
+import { reactive, ref, watch, watchEffect } from 'vue'
 
 const selectedUsers = ref<number[]>([])
-const selectedMaterials = ref<number[]>([])
+const inputQuantidades = reactive<Record<number, number>>({})
+
+// Lista final com id e quantidade escolhida
+const selectedMaterials = ref<{ id: number; quantidade: number }[]>([])
+
+// Quando finaliza ou quiser extrair os materiais selecionados
+function atualizarSelecionados() {
+  selectedMaterials.value = Object.entries(inputQuantidades)
+    .filter(([_, qtd]) => qtd > 0)
+    .map(([id, qtd]) => ({
+      id: Number(id),
+      quantidade: qtd,
+    }))
+  console.log(selectedMaterials.value)
+}
 
 const users = ref([
   {
@@ -183,116 +197,130 @@ const materiais = ref([
 <template>
   <div class="main-container">
     <Navbar :page="3" :disable="true" />
-    <div class="inputs-container">
-      <div class="top-inputs">
-        <div class="top-left-cotainer">
-          <div class="little-title">Pedido</div>
-          <form>
-            <div class="tl-top-form">
-              <div class="nome-container tl-input">
-                <input type="text" id="nome" placeholder="" />
-                <label class="nome-label" for="nome">Nome</label>
+    <form @submit.prevent="atualizarSelecionados">
+      <div class="inputs-container">
+        <div class="top-inputs">
+          <div class="top-left-cotainer">
+            <div class="little-title">Pedido</div>
+            <div class="form">
+              <div class="tl-top-form">
+                <div class="nome-container tl-input">
+                  <input type="text" id="nome" placeholder="" />
+                  <label class="nome-label" for="nome">Nome</label>
+                </div>
+                <div class="origem-container tl-input">
+                  <input type="text" id="origem" placeholder="" />
+                  <label class="origem-label" for="origem">Origem</label>
+                </div>
               </div>
-              <div class="origem-container tl-input">
-                <input type="text" id="origem" placeholder="" />
-                <label class="origem-label" for="origem">Origem</label>
+              <div class="tipo-container tl-input">
+                <input type="text" id="tipo" placeholder="" />
+                <label class="tipo-label" for="tipo">Tipo</label>
+              </div>
+              <div class="descricao-container tl-input">
+                <input type="text" id="descricao" placeholder="" />
+                <label class="descricao-label" for="descricao">Descrição</label>
               </div>
             </div>
-            <div class="tipo-container tl-input">
-              <input type="text" id="tipo" placeholder="" />
-              <label class="tipo-label" for="tipo">Tipo</label>
-            </div>
-            <div class="descricao-container tl-input">
-              <input type="text" id="descricao" placeholder="" />
-              <label class="descricao-label" for="descricao">Descrição</label>
-            </div>
-          </form>
-        </div>
-        <div class="top-right-cotainer">
-          <div class="little-title">Equipa</div>
-          <table class="tr-table">
-            <thead class="tr-table-header">
-              <tr>
-                <th class="tr-h">Selecionar</th>
-                <th class="tr-h">Trabalhador</th>
-              </tr>
-            </thead>
-          </table>
-          <div class="tr-body-scroll">
+          </div>
+          <div class="top-right-cotainer">
+            <div class="little-title">Equipa</div>
             <table class="tr-table">
-              <tbody>
-                <tr v-for="user in users" :key="user.id">
-                  <td
-                    class="tr-d"
-                    :style="{ backgroundColor: user.id % 2 === 0 ? 'transparent' : '#d3dce6' }"
-                  >
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      :value="user.id"
-                      v-model="selectedUsers"
-                    />
-                  </td>
-                  <td
-                    class="tr-d"
-                    :style="{ backgroundColor: user.id % 2 === 0 ? 'transparent' : '#d3dce6' }"
-                  >
-                    {{ user.nome }}
-                  </td>
+              <thead class="tr-table-header">
+                <tr>
+                  <th class="tr-h">Selecionar</th>
+                  <th class="tr-h">Trabalhador</th>
                 </tr>
-              </tbody>
+              </thead>
             </table>
+            <div class="tr-body-scroll">
+              <table class="tr-table">
+                <tbody>
+                  <tr v-for="user in users" :key="user.id">
+                    <td
+                      class="tr-d"
+                      :style="{ backgroundColor: user.id % 2 === 0 ? 'transparent' : '#d3dce6' }"
+                    >
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        :value="user.id"
+                        v-model="selectedUsers"
+                      />
+                    </td>
+                    <td
+                      class="tr-d"
+                      :style="{ backgroundColor: user.id % 2 === 0 ? 'transparent' : '#d3dce6' }"
+                    >
+                      {{ user.nome }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="bottom-inputs">
-        <div class="bottom-left-container">
-          <div class="little-title">Materiais</div>
-          <table class="bl-table">
-            <thead class="bl-table-header">
-              <tr>
-                <th class="bl-h">Material</th>
-                <th class="bl-h">Quantidade</th>
-              </tr>
-            </thead>
-          </table>
-          <div class="bl-body-scroll">
+        <div class="bottom-inputs">
+          <div class="bottom-left-container">
+            <div class="little-title">Materiais</div>
             <table class="bl-table">
-              <tbody>
-                <tr v-for="material in materiais" :key="material.id">
-                  <td
-                    class="bl-d"
-                    :style="{ backgroundColor: material.id % 2 === 0 ? 'transparent' : '#d3dce6' }"
-                  >
-                    {{ material.nome }}
-                  </td>
-                  <td
-                    class="bl-d"
-                    :style="{ backgroundColor: material.id % 2 === 0 ? 'transparent' : '#d3dce6' }"
-                  >
-                    <input type="number" />
-                  </td>
+              <thead class="bl-table-header">
+                <tr>
+                  <th class="bl-h">Material</th>
+                  <th class="bl-h">Quantidade</th>
                 </tr>
-              </tbody>
+              </thead>
             </table>
+            <div class="bl-body-scroll">
+              <table class="bl-table">
+                <tbody>
+                  <tr v-for="material in materiais" :key="material.id">
+                    <td
+                      class="bl-d"
+                      :style="{
+                        backgroundColor: material.id % 2 === 0 ? 'transparent' : '#d3dce6',
+                      }"
+                    >
+                      {{ material.nome }}
+                    </td>
+                    <td
+                      class="bl-d"
+                      :style="{
+                        backgroundColor: material.id % 2 === 0 ? 'transparent' : '#d3dce6',
+                      }"
+                    >
+                      <input
+                        type="number"
+                        v-model.number="inputQuantidades[material.id]"
+                        min="0"
+                        :max="material.quantidade"
+                        placeholder="0"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="bottom-right-container">
+            <div class="little-title">Finalizar</div>
+            <div class="form">
+              <div class="data-container">
+                <input type="date" id="data" placeholder="xx / xx / xx" />
+                <label class="data-label" for="data">Data</label>
+              </div>
+              <div class="inicio-container">
+                <input type="time" id="inicio" placeholder="" />
+                <label class="inicio-label" for="inicio">Inicio</label>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Finalizar
+              </button>
+            </div>
           </div>
         </div>
-        <div class="bottom-right-container">
-          <div class="little-title">Finalizar</div>
-          <form>
-            <div class="data-container">
-              <input type="date" id="data" placeholder="xx / xx / xx" />
-              <label class="data-label" for="data">Data</label>
-            </div>
-            <div class="inicio-container">
-              <input type="time" id="inicio" placeholder="" />
-              <label class="inicio-label" for="inicio">Inicio</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Finalizar</button>
-          </form>
-        </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 <style scoped>
@@ -343,7 +371,7 @@ const materiais = ref([
   font-size: 0.75rem;
   font-weight: 600;
 }
-form {
+.form {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -563,7 +591,7 @@ form {
 }
 
 .bl-body-scroll .bl-table .bl-d:first-child {
-  width: 90%;
+  width: 100%;
 }
 
 /* Bottom Right */
@@ -602,8 +630,8 @@ form {
   outline: none;
 }
 .data-container input:focus {
-    color: #d7a871;
-    border: 1px solid #d7a871;
+  color: #d7a871;
+  border: 1px solid #d7a871;
 }
 .inicio-container {
   display: flex;
@@ -662,7 +690,7 @@ form {
   }
   .nome-container {
     width: 55%;
-}
+  }
   .bottom-inputs {
     display: flex;
     flex-direction: row;

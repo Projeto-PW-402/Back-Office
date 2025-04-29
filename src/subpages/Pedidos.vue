@@ -69,8 +69,8 @@ const selectedPage = computed(() => {
 
 const pedidos = ref([
   { id: 1, nome: 'João Silva', local: 'Lisboa', data: '2025-04-15', estado: 0 },
-  { id: 2, nome: 'Ricardo Silva', local: 'Braga', data: '2025-04-6', estado: 0 },
-  { id: 3, nome: 'Ana Costa', local: 'Porto', data: '2025-04-10', estado: 0 },
+  { id: 2, nome: 'Ricardo Silva', local: 'Braga', data: '2025-04-6', estado: 1 },
+  { id: 3, nome: 'Ana Costa', local: 'Porto', data: '2025-04-10', estado: -1 },
   { id: 4, nome: 'Mariana Sousa', local: 'Coimbra', data: '2025-04-12', estado: 0 },
   { id: 5, nome: 'Carlos Martins', local: 'Faro', data: '2025-04-18', estado: 0 },
   { id: 6, nome: 'Rita Almeida', local: 'Aveiro', data: '2025-04-20', estado: 0 },
@@ -150,7 +150,7 @@ function onAccept(auditoria_id: number) {
                         <tbody class="text-center align-middle">
                             <tr v-for="pedido in paginatedpedidos" :key="pedido.id">
                                 <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">
-                                    <p v-if="pedido.estado === 0" :style="{color: 'orange'}">Em Espera <Timer/></p>
+                                    <p v-if="pedido.estado === 0" :style="{color: 'orange'}">Em Análise <Timer/></p>
                                     <p v-else-if="pedido.estado === -1" :style="{color: 'red'}">Recusado <X/></p>
                                     <p v-else :style="{color: 'green'}">Aceite <Check/></p>
                                 </td>
