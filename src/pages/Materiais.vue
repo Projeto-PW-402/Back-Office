@@ -259,7 +259,7 @@ function handleClick(){
 
       <!-- Botão Adicionar -->
       <div class="text-end mt-3">
-        <button class="btn btn-warning" id="adicionar" @click=handleClick >Adicionar</button>
+        <button type="button" class="btn btn-warning" id="adicionar" @click=handleClick >Adicionar</button>
       </div>
     </div>
   </div>

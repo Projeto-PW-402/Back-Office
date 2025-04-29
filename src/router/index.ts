@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory} from 'vue-router'
 
 const routes = [
 
@@ -25,7 +25,7 @@ const routes = [
   },
   {
     path: '/auditorias',
-    redirect: to => {
+    redirect: (to) => {
         // the function receives the target route as the argument
         return to.path.replace('auditorias', 'auditorias/pedidos')
       },
@@ -46,7 +46,12 @@ const routes = [
       },
     ],
   },
-
+  {
+    path: '/auditorias/pedidos/config/:id',
+    name: 'CriarAuditoria',
+    component: () => import('../subpages/CriarAuditoria.vue'),
+    props: true
+  },
 ]
 
 const router = createRouter({

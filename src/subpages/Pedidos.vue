@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import Navbar from '../components/Navbar.vue'
-import { useRoute } from 'vue-router';
-import { Check, X, Info, FileText } from 'lucide-vue-next';
+import { Check, X, Info, FileText, Timer } from 'lucide-vue-next';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router'
 
 const options = [];
 const selected = ref<number[]>([]);
 const perPage = ref(10);
-const route = useRoute();
+const route = useRoute()
+const router = useRouter()
 
 const w_screen = ref(window.innerWidth)
 const h_screen = ref(window.innerHeight)
@@ -67,31 +68,31 @@ const selectedPage = computed(() => {
 })
 
 const pedidos = ref([
-    { id: 1, nome: 'João Silva', local: 'Lisboa', data: '2025-04-15' },
-    { id: 2, nome: 'Ricardo Silva', local: 'Braga', data: '2025-04-6' },
-    { id: 3, nome: 'Ana Costa', local: 'Porto', data: '2025-04-10' },
-    { id: 4, nome: 'Mariana Sousa', local: 'Coimbra', data: '2025-04-12' },
-    { id: 5, nome: 'Carlos Martins', local: 'Faro', data: '2025-04-18' },
-    { id: 6, nome: 'Rita Almeida', local: 'Aveiro', data: '2025-04-20' },
-    { id: 7, nome: 'Bruno Lopes', local: 'Setúbal', data: '2025-04-14' },
-    { id: 8, nome: 'Sara Fernandes', local: 'Guimarães', data: '2025-04-09' },
-    { id: 9, nome: 'Tiago Rocha', local: 'Leiria', data: '2025-04-07' },
-    { id: 10, nome: 'Inês Ribeiro', local: 'Viseu', data: '2025-04-11' },
-    { id: 11, nome: 'Miguel Pereira', local: 'Évora', data: '2025-04-22' },
-    { id: 12, nome: 'Cláudia Martins', local: 'Lisboa', data: '2025-04-17' },
-    { id: 13, nome: 'Paulo Silva', local: 'Porto', data: '2025-04-14' },
-    { id: 14, nome: 'Juliana Ribeiro', local: 'Funchal', data: '2025-04-19' },
-    { id: 15, nome: 'Sofia Mendes', local: 'Leiria', data: '2025-04-13' },
-    { id: 16, nome: 'André Costa', local: 'Aveiro', data: '2025-04-16' },
-    { id: 17, nome: 'Ricardo Lima', local: 'Braga', data: '2025-04-10' },
-    { id: 18, nome: 'Carla Almeida', local: 'Viseu', data: '2025-04-08' },
-    { id: 19, nome: 'Vítor Santos', local: 'Setúbal', data: '2025-04-21' },
-    { id: 20, nome: 'Isabel Ferreira', local: 'Guarda', data: '2025-04-05' },
-    { id: 21, nome: 'Daniela Nogueira', local: 'Coimbra', data: '2025-04-23' },
-    { id: 22, nome: 'Rui Oliveira', local: 'Braga', data: '2025-04-11' },
-    { id: 23, nome: 'Fábio Costa', local: 'Porto', data: '2025-04-18' },
-    { id: 24, nome: 'Helena Rocha', local: 'Lisboa', data: '2025-04-20' },
-    { id: 25, nome: 'Joana Martins', local: 'Faro', data: '2025-04-09' }
+  { id: 1, nome: 'João Silva', local: 'Lisboa', data: '2025-04-15', estado: 0 },
+  { id: 2, nome: 'Ricardo Silva', local: 'Braga', data: '2025-04-6', estado: 0 },
+  { id: 3, nome: 'Ana Costa', local: 'Porto', data: '2025-04-10', estado: 0 },
+  { id: 4, nome: 'Mariana Sousa', local: 'Coimbra', data: '2025-04-12', estado: 0 },
+  { id: 5, nome: 'Carlos Martins', local: 'Faro', data: '2025-04-18', estado: 0 },
+  { id: 6, nome: 'Rita Almeida', local: 'Aveiro', data: '2025-04-20', estado: 0 },
+  { id: 7, nome: 'Bruno Lopes', local: 'Setúbal', data: '2025-04-14', estado: 0 },
+  { id: 8, nome: 'Sara Fernandes', local: 'Guimarães', data: '2025-04-09', estado: 0 },
+  { id: 9, nome: 'Tiago Rocha', local: 'Leiria', data: '2025-04-07', estado: 0 },
+  { id: 10, nome: 'Inês Ribeiro', local: 'Viseu', data: '2025-04-11', estado: 0 },
+  { id: 11, nome: 'Miguel Pereira', local: 'Évora', data: '2025-04-22', estado: 0 },
+  { id: 12, nome: 'Cláudia Martins', local: 'Lisboa', data: '2025-04-17', estado: 0 },
+  { id: 13, nome: 'Paulo Silva', local: 'Porto', data: '2025-04-14', estado: 0 },
+  { id: 14, nome: 'Juliana Ribeiro', local: 'Funchal', data: '2025-04-19', estado: 0 },
+  { id: 15, nome: 'Sofia Mendes', local: 'Leiria', data: '2025-04-13', estado: 0 },
+  { id: 16, nome: 'André Costa', local: 'Aveiro', data: '2025-04-16', estado: 0 },
+  { id: 17, nome: 'Ricardo Lima', local: 'Braga', data: '2025-04-10', estado: 0 },
+  { id: 18, nome: 'Carla Almeida', local: 'Viseu', data: '2025-04-08', estado: 0 },
+  { id: 19, nome: 'Vítor Santos', local: 'Setúbal', data: '2025-04-21', estado: 0 },
+  { id: 20, nome: 'Isabel Ferreira', local: 'Guarda', data: '2025-04-05', estado: 0 },
+  { id: 21, nome: 'Daniela Nogueira', local: 'Coimbra', data: '2025-04-23', estado: 0 },
+  { id: 22, nome: 'Rui Oliveira', local: 'Braga', data: '2025-04-11', estado: 0 },
+  { id: 23, nome: 'Fábio Costa', local: 'Porto', data: '2025-04-18', estado: 0 },
+  { id: 24, nome: 'Helena Rocha', local: 'Lisboa', data: '2025-04-20', estado: 0 },
+  { id: 25, nome: 'Joana Martins', local: 'Faro', data: '2025-04-09', estado: 0 }
 ])
 
 const totalPages = computed(() => Math.ceil(pedidos.value.length / perPage.value))
@@ -121,6 +122,11 @@ watch(selectedPage, (newPage) => {
     console.log('Current page:', newPage)
 })
 
+function onAccept(auditoria_id: number) {
+    console.log('Auditoria ID:', auditoria_id)
+    router.push({path:`pedidos/config/${auditoria_id}`})
+}
+
 </script>
 
 <template>
@@ -133,10 +139,7 @@ watch(selectedPage, (newPage) => {
                     <table class="table  mb-0">
                         <thead class="text-center align-middle">
                             <tr>
-                                <th scope="col">
-                                    <input type="checkbox" class="form-check-input" :checked="selectAll"
-                                        @change="toggleSelectAll" />
-                                </th>
+                                <th scope="col">Estado</th>
                                 <th scope="col">Utilizador</th>
                                 <th scope="col">Local</th>
                                 <th scope="col">Data</th>
@@ -147,8 +150,9 @@ watch(selectedPage, (newPage) => {
                         <tbody class="text-center align-middle">
                             <tr v-for="pedido in paginatedpedidos" :key="pedido.id">
                                 <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">
-                                    <input type="checkbox" class="form-check-input" :value="pedido.id"
-                                        v-model="selected" />
+                                    <p v-if="pedido.estado === 0" :style="{color: 'orange'}">Em Espera <Timer/></p>
+                                    <p v-else-if="pedido.estado === -1" :style="{color: 'red'}">Recusado <X/></p>
+                                    <p v-else :style="{color: 'green'}">Aceite <Check/></p>
                                 </td>
                                 <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">{{
                                     pedido.nome }}</td>
@@ -157,7 +161,7 @@ watch(selectedPage, (newPage) => {
                                 <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">{{
                                     pedido.data }}</td>
                                 <td :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }">
-                                    <button class="actions" style="color:green;">
+                                    <button class="actions" style="color:green;" @click="onAccept(pedido.id)">
                                         <Check width="20px" height="20px" />
                                     </button>
                                     <button class="actions" style="color:red;">
