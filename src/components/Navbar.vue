@@ -12,7 +12,7 @@ const props = defineProps<{
   <div class="navbar-container">
     <div class="navbar-buttons">
       <div class="navbar-logo">
-        <img src="../assets/logo.svg" alt="Logo" class="logo" width="145px" height="55px" />
+        <img src="../assets/logo.png" alt="Logo" class="logo" width="145px" height="145px" />
       </div>
       <div class="navbar-user">
         <button class="btn btn-secondary">User <User color="white" /></button>
@@ -114,6 +114,10 @@ const props = defineProps<{
 </template>
 
 <style scoped>
+
+img {
+  filter: grayscale(100%);
+}
 .navbar-container {
   position: static;
   display: flex;
