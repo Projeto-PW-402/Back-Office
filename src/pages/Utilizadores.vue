@@ -179,14 +179,14 @@ onMounted(() => {
         <table class="table mb-0">
           <thead class="text-center align-middle">
             <tr>
-              <th scope="col">
+              <!-- <th scope="col">
                 <input
                   type="checkbox"
                   class="form-check-input"
                   :checked="selectAll"
                   @change="toggleSelectAll"
                 />
-              </th>
+              </th> -->
               <th scope="col">Nome</th>
               <th scope="col">Morada</th>
               <th scope="col" class="data" ref="tableData">Data De Nascimento</th>
@@ -198,14 +198,14 @@ onMounted(() => {
           </thead>
           <tbody class="text-center">
             <tr v-for="user in paginatedUsers" :key="user.id">
-              <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
+              <!-- <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
                 <input
                   type="checkbox"
                   class="form-check-input"
                   :value="user.id"
                   v-model="selected"
                 />
-              </td>
+              </td> -->
               <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
                 {{ user.nome }}
               </td>
@@ -216,7 +216,7 @@ onMounted(() => {
                 {{ user.morada }}
               </td>
               <td
-                class="data-row"
+                class="row"
                 :style="{
                   minWidth: tableWidthData,
                   backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white',

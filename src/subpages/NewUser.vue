@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { UserPlus, X } from 'lucide-vue-next'
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { createUser } from '@/services/userService'
 import { User } from '@/models/User'
+import IMask from 'imask'
 const props = defineProps<{
   visible: boolean
 }>()
@@ -12,6 +13,13 @@ const isVisible = ref(props.visible)
 const route = useRoute()
 const router = useRouter()
 const emit = defineEmits(['user-added'])
+
+const nome = ref('')
+const morada = ref('')
+const email = ref('')
+const dataNascimento = ref('')
+const telemovel = ref('')
+const especialidade = ref('')
 
 watchEffect(() => {
   // Verificar a query 'add' para controlar a visibilidade do modal
@@ -27,12 +35,12 @@ function closeModal() {
 
 async function addUser() {
   const user = new User({
-    nome: document.getElementById('name').value,
-    morada: document.getElementById('morada').value,
-    email: document.getElementById('email').value,
-    dataNascimento: document.getElementById('dataNascimento').value,
-    telemovel: document.getElementById('number').value,
-    especialidade: document.getElementById('especialidade').value,
+    nome: nome.value,
+    morada: morada.value,
+    email: email.value,
+    dataNascimento: dataNascimento.value,
+    telemovel: telemovel.value,
+    especialidade: especialidade.value,
   })
 
   try {
@@ -43,6 +51,16 @@ async function addUser() {
     console.error('Erro ao adicionar utilizador:', error)
   }
 }
+
+const inputRef = ref(null)
+
+onMounted(() => {
+  if (inputRef.value) {
+    IMask(inputRef.value, {
+      mask: '00/00/0000',
+    })
+  }
+})
 </script>
 <template>
   <div class="main-container" :style="{ display: isVisible ? 'flex' : 'none' }">
@@ -50,20 +68,26 @@ async function addUser() {
     <div class="close" @click="closeModal"><X /></div>
     <form id="userForm" @submit.prevent="addUser">
       <div class="name-container">
-        <input type="text" id="name" placeholder="" />
+        <input type="text" id="name" v-model="nome" placeholder="" />
         <label class="name-label" for="name">Nome</label>
       </div>
       <div class="morada-container">
-        <input type="text" id="morada" placeholder="" />
+        <input type="text" id="morada" v-model="morada" placeholder="" />
         <label class="morada-label" for="morada">Morada</label>
       </div>
       <div class="email-container">
-        <input type="email" id="email" placeholder="" />
+        <input type="email" id="email" v-model="email" placeholder="" />
         <label class="email-label" for="email">Email</label>
       </div>
       <div class="number-inputs">
         <div class="data-container">
-          <input type="date" id="dataNascimento" placeholder="xx / xx / xx" />
+          <input
+            ref="inputRef"
+            v-model="dataNascimento"
+            placeholder="dd/mm/yyyy"
+            class="form-control"
+            type="text"
+          />
           <label class="data-label" for="dataNascimento">Data de Nascimento</label>
         </div>
         <div class="number-container">
@@ -73,13 +97,13 @@ async function addUser() {
             <option value="FR">FR</option>
           </select>
           <div class="tele-container">
-            <input type="number" id="number" placeholder="xxx.xxx.xxx" />
+            <input type="number" id="number" v-model="telemovel" placeholder="xxx.xxx.xxx" />
             <label class="number-label" for="number">Número Telemóvel</label>
           </div>
         </div>
       </div>
       <div class="especialidade-container">
-        <input type="text" id="especialidade" placeholder="" />
+        <input type="text" id="especialidade" v-model="especialidade" placeholder="" />
         <label class="especialidade-label" for="especialidade">Especialidade</label>
       </div>
       <button type="submit">Adicionar<UserPlus width="22" height="22" /></button>
