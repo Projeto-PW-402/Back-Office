@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { Plus, Trash2Icon } from 'lucide-vue-next'
 import Navbar from '../components/Navbar.vue'
-import { computed, h, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
+import {
+  computed,
+  h,
+  onMounted,
+  onUnmounted,
+  onBeforeUnmount,
+  ref,
+  useTemplateRef,
+  watch,
+} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import NewUser from '@/subpages/NewUser.vue'
+import { fetchUsers, deleteUser } from '@/services/userService'
 
 const options = []
 const selected = ref<number[]>([])
@@ -23,12 +33,11 @@ function updateSize() {
 function sizePerWindow(newHeight: number) {
   if (newHeight < 650) {
     perPage.value = 2
-  }else if (newHeight < 864){
-    perPage.value = 6  
-  }else if (newHeight < 956){
+  } else if (newHeight < 864) {
+    perPage.value = 6
+  } else if (newHeight < 956) {
     perPage.value = 7
-  }
-  else if (newHeight < 1316) {
+  } else if (newHeight < 1316) {
     perPage.value = 10
   } else {
     perPage.value = 17
@@ -60,6 +69,58 @@ const toggleSelectAll = () => {
   }
 }
 
+const isMenuEnabled = computed(() => {
+  const add = route.query.add
+  if (add === undefined || add === 'false') {
+    return false
+  } else {
+    return true
+  }
+})
+
+const addUser = ref(false)
+const isModalActive = ref(isMenuEnabled.value)
+
+watch(
+  () => route.query.add,
+  (newAdd) => {
+    isModalActive.value = newAdd !== 'false' && newAdd !== undefined
+  },
+)
+
+function handleClick() {
+  addUser.value = true
+  isModalActive.value = true
+  router.push({ path: '/users', query: { add: 'true' } })
+}
+
+const users = ref([])
+let intervalId: number
+
+async function loadUsers() {
+  users.value = await fetchUsers()
+}
+
+onMounted(async () => {
+  await loadUsers()
+  console.log(users.value)
+  intervalId = window.setInterval(loadUsers, 5000)
+})
+
+onBeforeUnmount(() => {
+  clearInterval(intervalId)
+})
+
+async function removeUser(userId: number) {
+  try {
+    await deleteUser(userId)
+    await loadUsers()
+    console.log('Utilizador eliminado com sucesso:', userId)
+  } catch (error) {
+    console.error('Erro ao eliminar utilizador:', error)
+  }
+}
+
 const paginatedUsers = computed(() => {
   const start = (currentPage.value - 1) * perPage.value
   return users.value.slice(start, start + perPage.value)
@@ -70,223 +131,6 @@ const selectedPage = computed(() => {
   const pageStr = Array.isArray(page) ? page[0] : page
   return parseInt(pageStr || '1')
 })
-
-const isMenuEnabled = computed(() => {
-  const add = route.query.add
-  if (add === undefined || add === 'false') {
-    return false
-  }else {
-    return true
-  }
-})
-
-
-const addUser = ref(false)
-const isModalActive = ref(isMenuEnabled.value)
-
-watch(() => route.query.add, (newAdd) => {
-  isModalActive.value = newAdd !== 'false' && newAdd !== undefined;
-  });
-
-function handleClick(){
-  addUser.value = true
-  isModalActive.value = true
-  router.push({ path: '/users', query: { add: 'true' } });
-}
-
-
-
-const users = ref([
-  {
-    id: 1,
-    nome: 'João Silva',
-    morada: 'Rua das Flores, Lisboa',
-    dataNascimento: '1985-06-15',
-    especialidade: 'Cardiologia',
-    email: 'joao.silva@example.com',
-    telemovel: '912345678',
-  },
-  {
-    id: 2,
-    nome: 'Ana Martins',
-    morada: 'Av. Central, Porto',
-    dataNascimento: '1990-03-22',
-    especialidade: 'Dermatologia',
-    email: 'ana.martins@example.com',
-    telemovel: '913456789',
-  },
-  {
-    id: 3,
-    nome: 'Carlos Oliveira',
-    morada: 'Rua do Sol, Faro',
-    dataNascimento: '1982-11-05',
-    especialidade: 'Neurologia',
-    email: 'carlos.oliveira@example.com',
-    telemovel: '914567890',
-  },
-  {
-    id: 4,
-    nome: 'Sofia Rocha',
-    morada: 'Estrada da Serra, Braga',
-    dataNascimento: '1995-01-30',
-    especialidade: 'Pediatria',
-    email: 'sofia.rocha@example.com',
-    telemovel: '915678901',
-  },
-  {
-    id: 5,
-    nome: 'Miguel Costa',
-    morada: 'Rua Nova, Coimbra',
-    dataNascimento: '1988-07-19',
-    especialidade: 'Ortopedia',
-    email: 'miguel.costa@example.com',
-    telemovel: '916789012',
-  },
-  {
-    id: 6,
-    nome: 'Inês Almeida',
-    morada: 'Av. da Liberdade, Lisboa',
-    dataNascimento: '1993-09-25',
-    especialidade: 'Ginecologia',
-    email: 'ines.almeida@example.com',
-    telemovel: '917890123',
-  },
-  {
-    id: 7,
-    nome: 'Pedro Fernandes',
-    morada: 'Rua das Laranjeiras, Porto',
-    dataNascimento: '1979-04-12',
-    especialidade: 'Psiquiatria',
-    email: 'pedro.fernandes@example.com',
-    telemovel: '918901234',
-  },
-  {
-    id: 8,
-    nome: 'Rita Sousa',
-    morada: 'Largo do Carmo, Évora',
-    dataNascimento: '1987-10-08',
-    especialidade: 'Oftalmologia',
-    email: 'rita.sousa@example.com',
-    telemovel: '919012345',
-  },
-  {
-    id: 9,
-    nome: 'Tiago Nunes',
-    morada: 'Rua do Mercado, Leiria',
-    dataNascimento: '1991-12-02',
-    especialidade: 'Urologia',
-    email: 'tiago.nunes@example.com',
-    telemovel: '910123456',
-  },
-  {
-    id: 10,
-    nome: 'Cláudia Pinto',
-    morada: 'Av. dos Aliados, Porto',
-    dataNascimento: '1986-08-17',
-    especialidade: 'Pedreido',
-    email: 'claudia.pinto@example.com',
-    telemovel: '911234567',
-  },
-  {
-    id: 11,
-    nome: 'Bruno Marques',
-    morada: 'Rua das Oliveiras, Aveiro',
-    dataNascimento: '1984-02-21',
-    especialidade: 'Gastroenterologia',
-    email: 'bruno.marques@example.com',
-    telemovel: '912345679',
-  },
-  {
-    id: 12,
-    nome: 'Helena Ribeiro',
-    morada: 'Rua das Hortas, Funchal',
-    dataNascimento: '1992-06-13',
-    especialidade: 'Endocrinologia',
-    email: 'helena.ribeiro@example.com',
-    telemovel: '913456780',
-  },
-  {
-    id: 13,
-    nome: 'Daniel Lopes',
-    morada: 'Rua da Palmeira, Setúbal',
-    dataNascimento: '1994-05-09',
-    especialidade: 'Reumatologia',
-    email: 'daniel.lopes@example.com',
-    telemovel: '914567891',
-  },
-  {
-    id: 14,
-    nome: 'Mariana Figueiredo',
-    morada: 'Av. Beira Mar, Viana do Castelo',
-    dataNascimento: '1989-03-27',
-    especialidade: 'Hematologia',
-    email: 'mariana.figueiredo@example.com',
-    telemovel: '915678902',
-  },
-  {
-    id: 15,
-    nome: 'Ricardo Teixeira',
-    morada: 'Rua do Carmo, Lisboa',
-    dataNascimento: '1983-11-11',
-    especialidade: 'Oncologia',
-    email: 'ricardo.teixeira@example.com',
-    telemovel: '916789013',
-  },
-  {
-    id: 16,
-    nome: 'Sara Carvalho',
-    morada: 'Travessa do Norte, Guarda',
-    dataNascimento: '1990-02-14',
-    especialidade: 'Nefrologia',
-    email: 'sara.carvalho@example.com',
-    telemovel: '917890134',
-  },
-  {
-    id: 17,
-    nome: 'André Gomes',
-    morada: 'Rua da Escola, Castelo Branco',
-    dataNascimento: '1986-07-29',
-    especialidade: 'Anestesiologia',
-    email: 'andre.gomes@example.com',
-    telemovel: '918901245',
-  },
-  {
-    id: 18,
-    nome: 'Laura Neves',
-    morada: 'Rua das Amoreiras, Santarém',
-    dataNascimento: '1991-05-03',
-    especialidade: 'Imunologia',
-    email: 'laura.neves@example.com',
-    telemovel: '919012356',
-  },
-  {
-    id: 19,
-    nome: 'Hugo Barros',
-    morada: 'Rua do Forno, Viseu',
-    dataNascimento: '1985-09-20',
-    especialidade: 'Cirurgia Geral',
-    email: 'hugo.barros@example.com',
-    telemovel: '910123467',
-  },
-  {
-    id: 20,
-    nome: 'Patrícia Dias',
-    morada: 'Rua das Lages, Beja',
-    dataNascimento: '1993-12-26',
-    especialidade: 'Medicina Interna',
-    email: 'patricia.dias@example.com',
-    telemovel: '911234578',
-  },
-  {
-    id: 21,
-    nome: 'Luís Matos',
-    morada: 'Rua do Lago, Bragança',
-    dataNascimento: '1980-01-18',
-    especialidade: 'Cirurgia Plástica',
-    email: 'luis.matos@example.com',
-    telemovel: '912345689',
-  },
-])
 
 const totalPages = computed(() => Math.ceil(users.value.length / perPage.value))
 const currentPage = ref(selectedPage.value)
@@ -323,15 +167,12 @@ onMounted(() => {
   tableWidthData.value = tableData.value?.getBoundingClientRect().width
   tableWidthEspecialidade.value = tableEspecialidade.value?.getBoundingClientRect().width
   console.log('Width of tableData:', tableWidthEspecialidade.value)
-
 })
-
-
 </script>
 
 <template>
-  <div class="main-container" :style="{ filter: isModalActive ? 'blur(5px)' : 'blur(0)'  }">
-    <Navbar :page="2" :disable=isModalActive />
+  <div class="main-container" :style="{ filter: isModalActive ? 'blur(5px)' : 'blur(0)' }">
+    <Navbar :page="2" :disable="isModalActive" />
     <div class="container-fluid p-4 bg-light min-vh-100">
       <h2 class="mb-4 fw-bold" id="title">Users</h2>
       <div class="table-responsive bg-white">
@@ -355,7 +196,7 @@ onMounted(() => {
               <th scope="col">Ação</th>
             </tr>
           </thead>
-          <tbody class="text-center" >
+          <tbody class="text-center">
             <tr v-for="user in paginatedUsers" :key="user.id">
               <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
                 <input
@@ -374,10 +215,16 @@ onMounted(() => {
               >
                 {{ user.morada }}
               </td>
-              <td class="data-row" :style="{minWidth: tableWidthData  , backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white'}">
+              <td
+                class="data-row"
+                :style="{
+                  minWidth: tableWidthData,
+                  backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white',
+                }"
+              >
                 {{ user.dataNascimento }}
               </td>
-              <td :style="{backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
+              <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
                 {{ user.especialidade }}
               </td>
               <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
@@ -393,7 +240,7 @@ onMounted(() => {
                 <button class="actions" style="color: orange">
                   <Plus width="20px" height="20px" />
                 </button>
-                <button class="actions" style="color: red">
+                <button class="actions" style="color: red" @click="removeUser(user.id)">
                   <Trash2Icon width="20px" height="20px" />
                 </button>
               </td>
@@ -499,12 +346,11 @@ onMounted(() => {
 
       <!-- Botão Adicionar -->
       <div class="text-end mt-3">
-        <button class="btn btn-warning" id="adicionar" @click=handleClick >Adicionar</button>
+        <button class="btn btn-warning" id="adicionar" @click="handleClick">Adicionar</button>
       </div>
-      
     </div>
   </div>
-  <NewUser :visible="isModalActive" />
+  <NewUser :visible="isModalActive" @user-added="loadUsers" />
 </template>
 
 <style scoped>
@@ -569,7 +415,7 @@ tbody {
   gap: 10px;
 }
 
-td{
+td {
   background-color: #fff;
   border: none;
   border-radius: 0%;
@@ -663,7 +509,7 @@ ul {
   width: 10rem;
   height: 3rem;
   background-color: #d7a871;
-  transition:all 0.2s cubic-bezier(0.47, 0, 0.745, 0.715);
+  transition: all 0.2s cubic-bezier(0.47, 0, 0.745, 0.715);
 }
 
 #adicionar:hover {
@@ -672,5 +518,4 @@ ul {
   cursor: pointer;
   transform: scale(1.05);
 }
-
 </style>
