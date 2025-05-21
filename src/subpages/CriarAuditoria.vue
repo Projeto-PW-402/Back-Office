@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import Navbar from '@/components/Navbar.vue'
+import type { Auditoria } from '@/models/Auditoria'
+import type { User } from '@/models/User'
 import { reactive, ref, watch, watchEffect } from 'vue'
 
 const selectedUsers = ref<number[]>([])
@@ -19,180 +21,8 @@ function atualizarSelecionados() {
   console.log(selectedMaterials.value)
 }
 
-const users = ref([
-  {
-    id: 1,
-    nome: 'João Silva',
-    morada: 'Rua das Flores, Lisboa',
-    dataNascimento: '1985-06-15',
-    especialidade: 'Cardiologia',
-    email: 'joao.silva@example.com',
-    telemovel: '912345678',
-  },
-  {
-    id: 2,
-    nome: 'Ana Martins',
-    morada: 'Av. Central, Porto',
-    dataNascimento: '1990-03-22',
-    especialidade: 'Dermatologia',
-    email: 'ana.martins@example.com',
-    telemovel: '913456789',
-  },
-  {
-    id: 3,
-    nome: 'Carlos Oliveira',
-    morada: 'Rua do Sol, Faro',
-    dataNascimento: '1982-11-05',
-    especialidade: 'Neurologia',
-    email: 'carlos.oliveira@example.com',
-    telemovel: '914567890',
-  },
-  {
-    id: 4,
-    nome: 'Sofia Rocha',
-    morada: 'Estrada da Serra, Braga',
-    dataNascimento: '1995-01-30',
-    especialidade: 'Pediatria',
-    email: 'sofia.rocha@example.com',
-    telemovel: '915678901',
-  },
-  {
-    id: 5,
-    nome: 'Miguel Costa',
-    morada: 'Rua Nova, Coimbra',
-    dataNascimento: '1988-07-19',
-    especialidade: 'Ortopedia',
-    email: 'miguel.costa@example.com',
-    telemovel: '916789012',
-  },
-  {
-    id: 6,
-    nome: 'Inês Almeida',
-    morada: 'Av. da Liberdade, Lisboa',
-    dataNascimento: '1993-09-25',
-    especialidade: 'Ginecologia',
-    email: 'ines.almeida@example.com',
-    telemovel: '917890123',
-  },
-  {
-    id: 7,
-    nome: 'Pedro Fernandes',
-    morada: 'Rua das Laranjeiras, Porto',
-    dataNascimento: '1979-04-12',
-    especialidade: 'Psiquiatria',
-    email: 'pedro.fernandes@example.com',
-    telemovel: '918901234',
-  },
-  {
-    id: 8,
-    nome: 'Rita Sousa',
-    morada: 'Largo do Carmo, Évora',
-    dataNascimento: '1987-10-08',
-    especialidade: 'Oftalmologia',
-    email: 'rita.sousa@example.com',
-    telemovel: '919012345',
-  },
-  {
-    id: 9,
-    nome: 'Tiago Nunes',
-    morada: 'Rua do Mercado, Leiria',
-    dataNascimento: '1991-12-02',
-    especialidade: 'Urologia',
-    email: 'tiago.nunes@example.com',
-    telemovel: '910123456',
-  },
-  {
-    id: 10,
-    nome: 'Cláudia Pinto',
-    morada: 'Av. dos Aliados, Porto',
-    dataNascimento: '1986-08-17',
-    especialidade: 'Pedreido',
-    email: 'claudia.pinto@example.com',
-    telemovel: '911234567',
-  },
-])
-const materiais = ref([
-  {
-    id: 1,
-    nome: 'Tinta Acrílica',
-    tipo: 'Material',
-    descricao: 'Tinta branca para interiores',
-    quantidade: 10,
-    preco: '15.50€',
-  },
-  {
-    id: 2,
-    nome: 'Pincel Médio',
-    tipo: 'Ferramenta',
-    descricao: 'Pincel de cerdas sintéticas',
-    quantidade: 25,
-    preco: '3.20€',
-  },
-  {
-    id: 3,
-    nome: 'Rolo de Pintura',
-    tipo: 'Ferramenta',
-    descricao: 'Rolo para superfícies lisas',
-    quantidade: 12,
-    preco: '5.50€',
-  },
-  {
-    id: 4,
-    nome: 'Fita de Pintura',
-    tipo: 'Acessório',
-    descricao: 'Fita adesiva azul, 50m',
-    quantidade: 18,
-    preco: '2.00€',
-  },
-  {
-    id: 5,
-    nome: 'Lixa Grão 120',
-    tipo: 'Material',
-    descricao: 'Lixa fina para acabamentos',
-    quantidade: 30,
-    preco: '0.80€',
-  },
-  {
-    id: 6,
-    nome: 'Betume',
-    tipo: 'Material',
-    descricao: 'Betume para madeira',
-    quantidade: 6,
-    preco: '4.70€',
-  },
-  {
-    id: 7,
-    nome: 'Espátula Inox',
-    tipo: 'Ferramenta',
-    descricao: 'Espátula 10cm cabo plástico',
-    quantidade: 14,
-    preco: '3.60€',
-  },
-  {
-    id: 8,
-    nome: 'Luvas Nitrilo',
-    tipo: 'Proteção',
-    descricao: 'Luvas descartáveis, tamanho M',
-    quantidade: 100,
-    preco: '0.15€',
-  },
-  {
-    id: 9,
-    nome: 'Óculos de Proteção',
-    tipo: 'Proteção',
-    descricao: 'Óculos antiembaciamento',
-    quantidade: 20,
-    preco: '6.90€',
-  },
-  {
-    id: 10,
-    nome: 'Máscara FFP2',
-    tipo: 'Proteção',
-    descricao: 'Máscara de proteção respiratória',
-    quantidade: 50,
-    preco: '1.10€',
-  },
-])
+const users = ref<User[]>([])
+const materiais = ref<Material[]>([])
 </script>
 <template>
   <div class="main-container">
@@ -313,9 +143,7 @@ const materiais = ref([
                 <input type="time" id="inicio" placeholder="" />
                 <label class="inicio-label" for="inicio">Inicio</label>
               </div>
-              <button type="submit" class="btn btn-primary">
-                Finalizar
-              </button>
+              <button type="submit" class="btn btn-primary">Finalizar</button>
             </div>
           </div>
         </div>
