@@ -14,6 +14,7 @@ import {
 import { useRoute, useRouter } from 'vue-router'
 import NewUser from '@/subpages/NewUser.vue'
 import { fetchUsers, deleteUser } from '@/services/userService'
+import type { User } from '@/models/User'
 
 const options = []
 const selected = ref<number[]>([])
@@ -94,11 +95,16 @@ function handleClick() {
   router.push({ path: '/users', query: { add: 'true' } })
 }
 
-const users = ref([])
+const users = ref<User[]>([])
 let intervalId: number
 
 async function loadUsers() {
   users.value = await fetchUsers()
+  if (users.value.length === 0) {
+    users.value = []
+  } else {
+    console.log('Utilizadores carregados com sucesso:', users.value)
+  }
 }
 
 onMounted(async () => {
@@ -196,7 +202,7 @@ onMounted(() => {
               <th scope="col">Ação</th>
             </tr>
           </thead>
-          <tbody class="text-center">
+          <tbody class="text-center" v-if="users.length > 0">
             <tr v-for="user in paginatedUsers" :key="user.id">
               <!-- <td :style="{ backgroundColor: selected.includes(user.id) ? 'lightblue' : 'white' }">
                 <input
@@ -246,6 +252,7 @@ onMounted(() => {
               </td>
             </tr>
           </tbody>
+          <p v-else></p>
         </table>
       </div>
 

@@ -18,7 +18,7 @@ const nome = ref('')
 const morada = ref('')
 const email = ref('')
 const dataNascimento = ref('')
-const telemovel = ref('')
+const telemovel = ref()
 const especialidade = ref('')
 
 watchEffect(() => {

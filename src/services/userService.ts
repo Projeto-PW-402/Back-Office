@@ -6,7 +6,11 @@ export const fetchUsers = async () => {
   try {
     const response = await fetch(API_URL + '/user/get')
     if (!response.ok) throw new Error('Erro ao buscar usuários')
-    return await response.json()
+    const data = await response.json()
+    if (!data) {
+      return []
+    }
+    return data
   } catch (error) {
     console.error('Erro ao buscar usuários:', error)
     throw error
