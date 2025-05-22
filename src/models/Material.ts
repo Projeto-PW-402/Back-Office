@@ -3,15 +3,8 @@ export class Material {
   nome = ''
   tipo = ''
   descricao = ''
-  images: any[] = []
-  files: any[] = []
-  dnome = ''
-  dnif = ''
-  dcontacto = ''
-  demail = ''
-  location = ''
-  status = -1
-  date = ''
+  quant = 0
+  preco = 0
 
   constructor(data?: Partial<Material>) {
     Object.assign(this, data)

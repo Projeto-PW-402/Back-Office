@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Material } from '@/models/Material'
+import { createMaterial } from '@/services/materialService'
 import { DiamondPlus, X } from 'lucide-vue-next'
 import { ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -9,44 +11,72 @@ const props = defineProps<{
 const isVisible = ref(props.visible)
 const route = useRoute()
 const router = useRouter()
+const emit = defineEmits(['material-added'])
+
+const nome = ref('')
+const tipo = ref('')
+const descricao = ref('')
+const quant = ref(0)
+const preco = ref(0)
 
 watchEffect(() => {
-    // Verificar a query 'add' para controlar a visibilidade do modal
-    const add = route.query.add;
-    isVisible.value = add === 'true';
+  // Verificar a query 'add' para controlar a visibilidade do modal
+  const add = route.query.add
+  isVisible.value = add === 'true'
 })
 
+async function addMaterial() {
+  const material = new Material({
+    nome: nome.value,
+    tipo: tipo.value,
+    descricao: descricao.value,
+    quant: quant.value,
+    preco: preco.value,
+  })
+  try {
+    await createMaterial(material)
+    emit('material-added')
+    router.push({ path: '/materiais' })
+  } catch (error) {
+    console.error('Erro ao adicionar utilizador:', error)
+  }
+}
+
 function closeModal() {
-    isVisible.value = false;
-    // Alterar a query na URL para fechar o modal
-    router.push({ path: '/materiais', query: { add: 'false' } });
+  isVisible.value = false
+  // Alterar a query na URL para fechar o modal
+  router.push({ path: '/materiais', query: { add: 'false' } })
 }
 </script>
 <template>
   <div class="main-container" :style="{ display: props.visible ? 'flex' : 'none' }">
     <div class="title">Adicionar Material</div>
     <div class="close" @click="closeModal"><X /></div>
-    <form>
+    <form id="materialForm" @submit.prevent="addMaterial">
       <div class="name-container">
-        <input type="text" id="name" placeholder="" />
+        <input type="text" id="name" v-model="nome" placeholder="" />
         <label class="name-label" for="name">Nome</label>
       </div>
       <div class="middle-container">
         <div class="tipo-container">
-          <input type="text" id="tipo" placeholder="" />
+          <input type="text" id="tipo" v-model="tipo" placeholder="" />
           <label class="tipo-label" for="tipo">Tipo</label>
         </div>
         <div class="quantidade-container">
-          <input type="number" id="quantidade" placeholder="" />
+          <input type="number" id="quantidade" v-model="quant" placeholder="" />
           <label class="quantidade-label" for="quantidade">Quantidade</label>
         </div>
       </div>
+      <div class="preco-container">
+        <input type="number" id="preco" v-model="preco" placeholder="" />
+        <label class="preco-label" for="preco">Preço</label>
+      </div>
       <div class="descricao-container">
-        <input type="text" id="descricao" placeholder="" />
+        <input type="text" id="descricao" v-model="descricao" placeholder="" />
         <label class="descricao-label" for="descricao">Descrição</label>
       </div>
+      <button type="submit">Adicionar<DiamondPlus width="22" height="22" /></button>
     </form>
-    <button type="submit">Adicionar<DiamondPlus width="22" height="22" /></button>
   </div>
 </template>
 <style scoped>
@@ -56,7 +86,7 @@ function closeModal() {
   top: calc(50% - 275px);
   left: calc(50% - 250px);
   width: 500px;
-  height: 400px;
+  height: 470px;
   background-color: white;
   border: 2px solid black;
   border-radius: 10px;
@@ -123,11 +153,11 @@ form input:focus {
   color: #825a32;
 }
 
-.middle-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
+.middle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
 }
 
 .tipo-container {
@@ -143,7 +173,22 @@ form input:focus {
   display: flex;
   flex-direction: column-reverse;
 }
+.quantidade-container input {
+  padding-inline: 10px;
+}
 .quantidade-container input:focus + .quantidade-label {
+  color: #825a32;
+}
+.preco-container {
+  display: flex;
+  max-width: 53%;
+  flex-direction: column-reverse;
+}
+
+.preco-container input {
+  padding-inline: 10px;
+}
+.preco-container input:focus + .preco-label {
   color: #825a32;
 }
 
@@ -151,8 +196,8 @@ form input:focus {
   display: flex;
   flex-direction: column-reverse;
 }
-.descricao-container input{
-    height: 50px;
+.descricao-container input {
+  height: 50px;
 }
 .descricao-container input:focus + .descricao-label {
   color: #825a32;
