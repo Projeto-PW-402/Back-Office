@@ -5,6 +5,7 @@ export class Material {
   descricao = ''
   quant = 0
   preco = 0
+  visible = true
 
   constructor(data?: Partial<Material>) {
     Object.assign(this, data)

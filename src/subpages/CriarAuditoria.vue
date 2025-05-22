@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Navbar from '@/components/Navbar.vue'
 import type { Auditoria } from '@/models/Auditoria'
+import type { Material } from '@/models/Material'
 import type { User } from '@/models/User'
 import { reactive, ref, watch, watchEffect } from 'vue'
 
@@ -123,7 +124,7 @@ const materiais = ref<Material[]>([])
                         type="number"
                         v-model.number="inputQuantidades[material.id]"
                         min="0"
-                        :max="material.quantidade"
+                        :max="material.quant"
                         placeholder="0"
                       />
                     </td>

@@ -5,6 +5,7 @@ import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'v
 import { useRoute, useRouter } from 'vue-router'
 import NewMaterial from '@/subpages/NewMaterial.vue'
 import type { Material } from '@/models/Material'
+import EditMaterial from '@/subpages/EditMaterial.vue'
 import { fetchMaterials, updateMaterial } from '@/services/materialService'
 
 const options = []
@@ -99,6 +100,18 @@ async function editMaterial(materialId: number, data: Material) {
   }
 }
 
+async function hideMaterial(data: Material) {
+  const materialId = data.id
+  data.visible = false
+  try {
+    await updateMaterial(materialId, data)
+    await loadMaterials()
+    console.log('Utilizador eliminado com sucesso:', materialId)
+  } catch (error) {
+    console.error('Erro ao eliminar utilizador:', error)
+  }
+}
+
 const totalPages = computed(() => Math.ceil(materiais.value.length / perPage.value))
 const currentPage = ref(selectedPage.value)
 
@@ -126,7 +139,7 @@ watch(selectedPage, (newPage) => {
   console.log('Current page:', newPage)
 })
 
-const isMenuEnabled = computed(() => {
+const isAddMenuEnabled = computed(() => {
   const add = route.query.add
   if (add === undefined || add === 'false') {
     return false
@@ -134,9 +147,19 @@ const isMenuEnabled = computed(() => {
     return true
   }
 })
+const isEditMenuEnabled = computed(() => {
+  const edit = route.query.edit
+  if (edit === undefined || edit === 'false') {
+    return false
+  } else {
+    return true
+  }
+})
 
 const addMaterial = ref(false)
-const isModalActive = ref(isMenuEnabled.value)
+const eMaterial = ref(false)
+const isModalActive = ref(isAddMenuEnabled.value)
+const isEditModalActive = ref(isEditMenuEnabled.value)
 console.log('isModalActive:', isModalActive.value)
 
 watch(
@@ -145,15 +168,36 @@ watch(
     isModalActive.value = newAdd !== 'false' && newAdd !== undefined
   },
 )
+watch(
+  () => route.query.edit,
+  (newEdit) => {
+    isEditModalActive.value = newEdit !== 'false' && newEdit !== undefined
+  },
+)
 
 function handleClick() {
   addMaterial.value = true
   isModalActive.value = true
   router.push({ path: '/materiais', query: { add: 'true' } })
 }
+
+function hEditMaterial(data: Material) {
+  eMaterial.value = true
+  isEditModalActive.value = true
+  router.push({
+    path: '/materiais',
+    query: {
+      edit: 'true',
+      id: data.id,
+    },
+  })
+}
 </script>
 <template>
-  <div class="materiais-container" :style="{ filter: isModalActive ? 'blur(5px)' : 'blur(0)' }">
+  <div
+    class="materiais-container"
+    :style="{ filter: isModalActive || isEditModalActive ? 'blur(5px)' : 'blur(0)' }"
+  >
     <Navbar :page="4" :disable="isModalActive" />
     <div class="container-fluid p-4 bg-light min-vh-100">
       <h2 class="mb-4 fw-bold" id="title">Materiais</h2>
@@ -195,17 +239,21 @@ function handleClick() {
                 class="actions-container"
                 :style="{ backgroundColor: selected.includes(material.id) ? 'lightblue' : 'white' }"
               >
-                <button class="actions" style="color: red">
+                <button class="actions" style="color: red" @click="hideMaterial(material)">
                   <Trash2Icon width="20px" height="20px" />
                 </button>
-                <button class="actions" style="color: orange">
+                <button
+                  class="actions"
+                  style="color: orange"
+                  @click="editMaterial(material.id, material)"
+                >
                   <Pencil width="20px" height="20px" />
                 </button>
               </td>
               <td
                 :style="{ backgroundColor: selected.includes(material.id) ? 'lightblue' : 'white' }"
               >
-                {{ material.preco }}
+                {{ material.preco }} €
               </td>
             </tr>
           </tbody>
@@ -315,7 +363,8 @@ function handleClick() {
       </div>
     </div>
   </div>
-  <NewMaterial :visible="isModalActive" />
+  <NewMaterial :visible="isModalActive" @material-added="loadMaterials" />
+  <EditMaterial :isModalVisible="isEditModalActive" @material-edited="loadMaterials" />
 </template>
 
 <style scoped>
@@ -358,7 +407,6 @@ th {
 tbody {
   background-color: transparent;
   border-radius: 0%;
-  font-family: Poppins, sans-serif;
   font-weight: 500;
   margin-inline: 10px;
   width: 100%;
@@ -368,8 +416,9 @@ td {
   background-color: #fff;
   border: none;
   border-radius: 0%;
-  font-family: Poppins, sans-serif;
-  font-weight: 500;
+  font-family: Anaheim, sans-serif;
+  font-size: 18px;
+  font-weight: 00;
   margin-inline: 10px;
   width: 100%;
 }

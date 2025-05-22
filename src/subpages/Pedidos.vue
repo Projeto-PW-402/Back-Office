@@ -408,7 +408,6 @@ th {
 tbody {
   background-color: transparent;
   border-radius: 0%;
-  font-family: Poppins, sans-serif;
   font-weight: 500;
   margin-inline: 10px;
   width: 100%;
@@ -418,7 +417,8 @@ td {
   background-color: #fff;
   border: none;
   border-radius: 0%;
-  font-family: Poppins, sans-serif;
+  font-family: Anaheim, sans-serif;
+  font-size: 18px;
   font-weight: 500;
   margin-inline: 10px;
   width: 100%;

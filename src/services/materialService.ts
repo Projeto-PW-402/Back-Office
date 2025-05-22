@@ -16,6 +16,21 @@ export const fetchMaterials = async () => {
   }
 }
 
+export const fetchMaterialById = async (id: number) => {
+  try {
+    const response = await fetch(API_URL + '/material/' + id)
+    if (!response.ok) throw new Error('Erro ao buscar materiais')
+    const data = await response.json()
+    if (!data) {
+      return []
+    }
+    return data
+  } catch (error) {
+    console.error('Erro ao buscar materiais:', error)
+    throw error
+  }
+}
+
 export const createMaterial = async (data: Material) => {
   const response = await fetch(API_URL + '/material/add', {
     method: 'POST',
@@ -24,7 +39,8 @@ export const createMaterial = async (data: Material) => {
     },
     body: JSON.stringify(data),
   })
-
+  console.log('response', response)
+  console.log('data', data)
   if (!response.ok) {
     const error = await response.json()
     throw new Error(error.message || 'Erro ao criar material')

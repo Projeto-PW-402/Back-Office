@@ -1,82 +1,110 @@
 <script setup lang="ts">
 import { Material } from '@/models/Material'
-import { createMaterial } from '@/services/materialService'
+import { fetchMaterialById, updateMaterial } from '@/services/materialService'
 import { DiamondPlus, X } from 'lucide-vue-next'
-import { ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 const props = defineProps<{
-  visible: boolean
+  isModalVisible: boolean
 }>()
 
-const isVisible = ref(props.visible)
+const isVisible = ref(props.isModalVisible)
 const route = useRoute()
 const router = useRouter()
-const emit = defineEmits(['material-added'])
+const emit = defineEmits(['material-added', 'material-edited'])
 
-const nome = ref('')
-const tipo = ref('')
-const descricao = ref('')
-const quant = ref(0)
-const preco = ref(0)
+const nome = ref()
+const tipo = ref()
+const descricao = ref()
+const quant = ref()
+const preco = ref()
+const materialVisible = ref<boolean>(true)
 
 watchEffect(() => {
-  // Verificar a query 'add' para controlar a visibilidade do modal
-  const add = route.query.add
-  isVisible.value = add === 'true'
+  const id = Number(route.query.id)
+  const edit = route.query.edit
+  isVisible.value = edit === 'true'
+
+  if (!isNaN(id) && edit === 'true') {
+    getMaterialById(id)
+  }
 })
 
-async function addMaterial() {
+async function getMaterialById(id: number) {
+  try {
+    const material = await fetchMaterialById(id)
+    nome.value = material.nome
+    tipo.value = material.tipo
+    descricao.value = material.descricao
+    quant.value = material.quant
+    preco.value = material.preco
+    materialVisible.value = material.visible
+    console.log('Material:', material)
+  } catch (error) {
+    console.error('Erro ao buscar material:', error)
+  }
+}
+
+async function editMaterial() {
+  let isMaterialVisible = materialVisible
+  if (quant.value < 0 || preco.value < 0) {
+    alert('Quantidade e preço não podem ser negativos.')
+    return
+  }
+  if (quant.value === 0) {
+    isMaterialVisible.value = false
+  }
   const material = new Material({
     nome: nome.value,
     tipo: tipo.value,
     descricao: descricao.value,
     quant: quant.value,
     preco: preco.value,
+    visible: isMaterialVisible.value,
   })
-
   try {
-    await createMaterial(material)
-    emit('material-added')
+    await updateMaterial(material.id, material)
+    emit('material-edited')
     router.push({ path: '/materiais' })
   } catch (error) {
     console.error('Erro ao adicionar utilizador:', error)
   }
 }
 
-function closeModal() {
+function closeEditModal() {
   isVisible.value = false
   // Alterar a query na URL para fechar o modal
-  router.push({ path: '/materiais', query: { add: 'false' } })
+  router.push({ path: '/materiais', query: { edit: 'false' } })
 }
 </script>
 <template>
-  <div class="main-container" :style="{ display: props.visible ? 'flex' : 'none' }">
-    <div class="title">Adicionar Material</div>
-    <div class="close" @click="closeModal"><X /></div>
-    <form id="materialForm" @submit.prevent="addMaterial">
+  <div class="main-container" :style="{ display: props.isModalVisible ? 'flex' : 'none' }">
+    <div class="title">Editar Material</div>
+    <div class="close" @click="closeEditModal"><X /></div>
+    <form id="materialForm" @submit.prevent="editMaterial">
       <div class="name-container">
-        <input type="text" id="name" v-model="nome" placeholder="" />
+        <input type="text" id="name" v-model="nome" :placeholder="nome" />
         <label class="name-label" for="name">Nome</label>
       </div>
       <div class="middle-container">
         <div class="tipo-container">
-          <input type="text" id="tipo" v-model="tipo" placeholder="" />
+          <input type="text" id="tipo" v-model="tipo" :placeholder="tipo" />
           <label class="tipo-label" for="tipo">Tipo</label>
         </div>
         <div class="quantidade-container">
-          <input type="number" id="quantidade" v-model="quant" placeholder="" />
+          <input type="number" id="quantidade" v-model="quant" :placeholder="quant" />
           <label class="quantidade-label" for="quantidade">Quantidade</label>
         </div>
       </div>
       <div class="preco-container">
-        <input type="number" id="preco" v-model="preco" placeholder="" />
+        <input type="number" id="preco" v-model="preco" :placeholder="preco" />
         <label class="preco-label" for="preco">Preço</label>
       </div>
       <div class="descricao-container">
-        <input type="text" id="descricao" v-model="descricao" placeholder="" />
+        <input type="text" id="descricao" v-model="descricao" :placeholder="descricao" />
         <label class="descricao-label" for="descricao">Descrição</label>
       </div>
-      <button type="submit">Adicionar<DiamondPlus width="22" height="22" /></button>
+      <button type="submit">Update<DiamondPlus width="22" height="22" /></button>
     </form>
   </div>
 </template>
