@@ -16,6 +16,15 @@ export const fetchAuditorias = async () => {
   }
 }
 
+export const fetchAuditoriaById = async (id: number) => {
+  const response = await fetch(API_URL + `/auditoria/${id}`)
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message || 'Erro ao buscar auditoria')
+  }
+  return response.json()
+}
+
 export const editAuditoria = async (id: number, data: Auditoria) => {
   const response = await fetch(API_URL + `/auditoria/edit/${id}`, {
     method: 'PUT',

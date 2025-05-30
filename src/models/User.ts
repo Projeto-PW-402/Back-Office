@@ -7,6 +7,7 @@ export class User {
   email: string = ''
   telemovel: number = 0
   listaAuditorias: number[] = []
+  allowed: boolean = true
 
   constructor(data?: Partial<User>) {
     Object.assign(this, data)

@@ -17,6 +17,33 @@ export const fetchUsers = async () => {
   }
 }
 
+export const fetchUserById = async (id: number) => {
+  try {
+    const response = await fetch(API_URL + `/user/${id}`)
+    if (!response.ok) throw new Error('Erro ao buscar usuário')
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error)
+    throw error
+  }
+}
+
+export const updateUser = async (id: number, data: User) => {
+  const response = await fetch(API_URL + `/user/edit/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message || 'Erro ao atualizar usuário')
+  }
+  return response.json()
+}
+
 export const createUser = async (data: User) => {
   const response = await fetch(API_URL + '/user/add', {
     method: 'POST',

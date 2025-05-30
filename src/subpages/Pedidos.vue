@@ -145,9 +145,9 @@ async function requestInfo(auditoria_id: number, data: Auditoria) {
   try {
     await editAuditoria(auditoria_id, data)
     await loadAuditorias()
-    console.log('Utilizador eliminado com sucesso:', auditoria_id)
+    console.log('Estado:', auditoria_id)
   } catch (error) {
-    console.error('Erro ao eliminar utilizador:', error)
+    console.error('Erro ao editar Estado:', error)
   }
 }
 </script>
@@ -194,18 +194,24 @@ async function requestInfo(auditoria_id: number, data: Auditoria) {
                 <td
                   :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }"
                 >
-                  {{ dateFormat(pedido.date) }}
+                  {{ pedido.date }}
                 </td>
                 <td
                   :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }"
                 >
-                  <button class="actions" style="color: green" @click="onAccept(pedido.id)">
+                  <button
+                    class="actions"
+                    style="color: green"
+                    @click="onAccept(pedido.id)"
+                    :disabled="pedido['status'] == 1"
+                  >
                     <Check width="20px" height="20px" />
                   </button>
                   <button
                     class="actions"
                     style="color: red"
                     @click="rejectAuditoria(pedido.id, pedido)"
+                    :disabled="pedido['status'] == 1"
                   >
                     <X width="20px" height="20px" />
                   </button>
@@ -213,6 +219,7 @@ async function requestInfo(auditoria_id: number, data: Auditoria) {
                     class="actions"
                     style="color: yellow"
                     @click="requestInfo(pedido.id, pedido)"
+                    :disabled="pedido['status'] == 1"
                   >
                     <Info width="20px" height="20px" />
                   </button>

@@ -1,34 +1,153 @@
 <script setup lang="ts">
 import Navbar from '@/components/Navbar.vue'
-import type { Auditoria } from '@/models/Auditoria'
-import type { Material } from '@/models/Material'
+import { Auditoria } from '@/models/Auditoria'
+import { Material } from '@/models/Material'
 import type { User } from '@/models/User'
-import { reactive, ref, watch, watchEffect } from 'vue'
+import { fetchMaterialById, fetchMaterials, updateMaterial } from '@/services/materialService'
+import { fetchUserById, fetchUsers, updateUser } from '@/services/userService'
+import {
+  computed,
+  onBeforeMount,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+  watchEffect,
+} from 'vue'
+import IMask from 'imask'
+import { editAuditoria, fetchAuditoriaById } from '@/services/auditoriasService'
+import { useRoute } from 'vue-router'
+import router from '@/router'
 
-const selectedUsers = ref<number[]>([])
-const inputQuantidades = reactive<Record<number, number>>({})
+// Modo de desenvolvimento, para testes
+const dev = true
+console.log('Dev Mode:', dev)
+//
+
+const date = ref('')
+const time = ref('')
+
+const route = useRoute()
+const id = computed(() => Number(route.params.id))
+console.log('ID da Auditoria:', id.value)
+
+const inputUserIds = ref<number[]>([])
+// const selectedUsers = ref<{ id: number }[]>([])
 
 // Lista final com id e quantidade escolhida
+const inputQuantidades = reactive<Record<number, number>>({})
 const selectedMaterials = ref<{ id: number; quantidade: number }[]>([])
-
+const erro = ref('')
 // Quando finaliza ou quiser extrair os materiais selecionados
-function atualizarSelecionados() {
+async function createAuditoria() {
   selectedMaterials.value = Object.entries(inputQuantidades)
     .filter(([_, qtd]) => qtd > 0)
     .map(([id, qtd]) => ({
       id: Number(id),
       quantidade: qtd,
     }))
-  console.log(selectedMaterials.value)
+
+  for (const m of selectedMaterials.value) {
+    const material: Material = await fetchMaterialById(m.id)
+    if (material) {
+      material.quant -= m.quantidade
+    }
+    await updateMaterial(m.id, material)
+    auditoria['materiais'].push({
+      id: m.id,
+      quantidade: m.quantidade,
+    })
+  }
+  for (const u of inputUserIds.value) {
+    const user: User = await fetchUserById(u)
+    if (user) {
+      user['listaAuditorias'].push(id.value)
+      await updateUser(u, user)
+    }
+  }
+
+  auditoria.date = date.value + ' ' + time.value
+  auditoria.status = 1
+
+  await editAuditoria(id.value, auditoria)
+
+  if (dev) {
+    console.log('Materiais Selecionados', selectedMaterials.value)
+    console.log('Utilizadores Selecionados', inputUserIds.value)
+    console.log('Auditoria Atualizada:', auditoria)
+  }
+  // Alterar a query na URL para fechar o modal
+  router.push({ path: '/auditorias/pedidos', query: { add: 'false' } })
 }
 
 const users = ref<User[]>([])
+
+async function loadUsers() {
+  users.value = await fetchUsers()
+
+  if (users.value.length === 0) {
+    users.value = []
+  } else if (dev) {
+    console.log('Utilizadores:', users.value)
+    console.log('Selecionados:', inputUserIds)
+  }
+}
+
 const materiais = ref<Material[]>([])
+
+async function loadMaterials() {
+  materiais.value = await fetchMaterials()
+  if (materiais.value.length === 0) {
+    materiais.value = []
+  } else {
+    console.log('Materiais carregados com sucesso:', materiais.value)
+  }
+}
+
+let auditoria = new Auditoria()
+
+async function loadAuditoria() {
+  auditoria = await fetchAuditoriaById(id.value)
+  if (auditoria == null) {
+    erro.value = 'Auditoria não encontrada'
+    return
+  }
+}
+
+const inputRef = ref(null)
+const inputTimeRef = ref(null)
+
+onMounted(async () => {
+  await loadUsers()
+  await loadMaterials()
+  if (inputRef.value) {
+    IMask(inputRef.value, {
+      mask: '00/00/0000',
+    })
+  }
+  if (inputTimeRef.value) {
+    IMask(inputTimeRef.value, {
+      mask: '00:00',
+      lazy: true, // Mantém o campo visível mesmo sem valor
+    })
+  }
+  if (dev) {
+    console.log('Utilizadores carregados:', users.value)
+    console.log('Materiais carregados:', materiais.value)
+    console.log('Auditoria carregada:', auditoria)
+  }
+  // intervalId = window.setInterval(loadUsers, 5000)
+})
+
+onBeforeMount(async () => {
+  await loadAuditoria()
+})
 </script>
 <template>
   <div class="main-container">
     <Navbar :page="3" :disable="true" />
-    <form @submit.prevent="atualizarSelecionados">
+    <form id="auditoriaForm" @submit.prevent="createAuditoria">
       <div class="inputs-container">
         <div class="top-inputs">
           <div class="top-left-cotainer">
@@ -36,20 +155,20 @@ const materiais = ref<Material[]>([])
             <div class="form">
               <div class="tl-top-form">
                 <div class="nome-container tl-input">
-                  <input type="text" id="nome" placeholder="" />
+                  <input type="text" id="nome" v-model="auditoria.nome" disabled required />
                   <label class="nome-label" for="nome">Nome</label>
                 </div>
                 <div class="origem-container tl-input">
-                  <input type="text" id="origem" placeholder="" />
+                  <input type="text" id="origem" v-model="auditoria.location" disabled required />
                   <label class="origem-label" for="origem">Origem</label>
                 </div>
               </div>
               <div class="tipo-container tl-input">
-                <input type="text" id="tipo" placeholder="" />
+                <input type="text" id="tipo" v-model="auditoria.tipo" disabled required />
                 <label class="tipo-label" for="tipo">Tipo</label>
               </div>
               <div class="descricao-container tl-input">
-                <input type="text" id="descricao" placeholder="" />
+                <input type="text" id="descricao" v-model="auditoria.descricao" disabled required />
                 <label class="descricao-label" for="descricao">Descrição</label>
               </div>
             </div>
@@ -70,20 +189,24 @@ const materiais = ref<Material[]>([])
                   <tr v-for="user in users" :key="user.id">
                     <td
                       class="tr-d"
-                      :style="{ backgroundColor: user.id % 2 === 0 ? 'transparent' : '#d3dce6' }"
+                      :style="{
+                        backgroundColor: user.id % 2 == 0 ? 'transparent' : '#d3dce6',
+                      }"
                     >
                       <input
                         type="checkbox"
                         class="form-check-input"
                         :value="user.id"
-                        v-model="selectedUsers"
+                        v-model="inputUserIds"
+                        :disabled="!user.allowed"
                       />
                     </td>
                     <td
                       class="tr-d"
                       :style="{ backgroundColor: user.id % 2 === 0 ? 'transparent' : '#d3dce6' }"
                     >
-                      {{ user.nome }}
+                      <div v-if="user.allowed == true">{{ user.nome }}</div>
+                      <div v-else :style="{ color: 'lightgray' }">{{ user.nome }}</div>
                     </td>
                   </tr>
                 </tbody>
@@ -137,11 +260,26 @@ const materiais = ref<Material[]>([])
             <div class="little-title">Finalizar</div>
             <div class="form">
               <div class="data-container">
-                <input type="date" id="data" placeholder="xx / xx / xx" />
+                <input
+                  ref="inputRef"
+                  v-model="date"
+                  placeholder="dd/mm/yyyy"
+                  class="form-control"
+                  type="text"
+                  required
+                />
                 <label class="data-label" for="data">Data</label>
               </div>
               <div class="inicio-container">
-                <input type="time" id="inicio" placeholder="" />
+                <input
+                  type="text"
+                  id="inicio"
+                  placeholder=""
+                  v-model="time"
+                  ref="inputTimeRef"
+                  class="form-control"
+                  required
+                />
                 <label class="inicio-label" for="inicio">Inicio</label>
               </div>
               <button type="submit" class="btn btn-primary">Finalizar</button>
@@ -165,9 +303,10 @@ const materiais = ref<Material[]>([])
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: calc(100dvw - 400px);
   /* background-color: blue; */
   margin: 4.5rem;
-  padding: 3rem;
+  padding: 0rem;
 }
 
 .top-inputs {
@@ -177,6 +316,7 @@ const materiais = ref<Material[]>([])
   height: 50%;
   /* background-color: blue; */
 }
+
 .bottom-inputs {
   display: flex;
   flex-direction: row;
@@ -210,18 +350,22 @@ const materiais = ref<Material[]>([])
 }
 .tl-top-form {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
+  gap: 2rem;
 }
 .tl-input {
   display: flex;
   flex-direction: column-reverse;
 }
 .nome-container {
-  width: 65%;
+  width: 70%;
 }
 .nome-container input:focus + .nome-label {
   color: #825a32;
+}
+.origem-container {
+  width: 70%;
 }
 .origem-container input:focus + .origem-label {
   color: #825a32;
@@ -245,7 +389,7 @@ const materiais = ref<Material[]>([])
 }
 .top-left-cotainer input {
   border: 2px solid black;
-  border-radius: 6px;
+  border-radius: 2px;
   min-height: 2rem;
   outline: none;
 }
@@ -310,10 +454,10 @@ const materiais = ref<Material[]>([])
 .tr-body-scroll .tr-table .tr-d {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   /* text-align: center; */
   font-weight: 500;
-  font-size: 18px;
+  font-size: 20px;
   width: 100%;
   /* border-bottom: 2px solid black; */
 }
@@ -405,7 +549,7 @@ const materiais = ref<Material[]>([])
   width: 6rem;
   height: 1.8rem;
   border: 1px solid black;
-  border-radius: 6px;
+  border-radius: 2px;
   text-align: center;
   outline: none;
 }
@@ -455,7 +599,7 @@ const materiais = ref<Material[]>([])
   height: 2rem;
   text-align: center;
   border: 1px solid black;
-  border-radius: 6px;
+  border-radius: 2px;
   outline: none;
 }
 .data-container input:focus {
@@ -473,7 +617,7 @@ const materiais = ref<Material[]>([])
   height: 2rem;
   text-align: center;
   border: 1px solid black;
-  border-radius: 6px;
+  border-radius: 2px;
   outline: none;
 }
 .inicio-container input:focus {

@@ -1,3 +1,5 @@
+import type { Material } from './Material'
+
 export class Auditoria {
   id = 0
   nome = ''
@@ -5,6 +7,7 @@ export class Auditoria {
   descricao = ''
   images: any[] = []
   files: any[] = []
+  materiais: { id: number; quantidade: number }[] = []
   dnome = ''
   dnif = ''
   dcontacto = ''

@@ -20,7 +20,11 @@ const props = defineProps<{
       <nav>
         <ul>
           <li>
-            <RouterLink to="/dashboard" class="routes" :style="{ pointerEvents: props.disable ? 'none' : 'auto' }">
+            <RouterLink
+              to="/dashboard"
+              class="routes"
+              :style="{ pointerEvents: props.disable ? 'none' : 'auto' }"
+            >
               <button
                 class="btn btn-primary"
                 :style="
@@ -39,7 +43,11 @@ const props = defineProps<{
           </li>
 
           <li>
-            <RouterLink to="/monitoramento" class="routes" :style="{ pointerEvents: props.disable ? 'none' : 'auto' }">
+            <RouterLink
+              to="/monitoramento"
+              class="routes"
+              :style="{ pointerEvents: props.disable ? 'none' : 'auto' }"
+            >
               <button
                 class="btn btn-primary"
                 :style="
@@ -55,7 +63,11 @@ const props = defineProps<{
           </li>
 
           <li>
-            <RouterLink to="/users" class="routes" :style="{ pointerEvents: props.disable ? 'none' : 'auto' }">
+            <RouterLink
+              to="/users"
+              class="routes"
+              :style="{ pointerEvents: props.disable ? 'none' : 'auto' }"
+            >
               <button
                 class="btn btn-primary"
                 :style="
@@ -71,7 +83,11 @@ const props = defineProps<{
           </li>
 
           <li>
-            <RouterLink to="/auditorias/pedidos" class="routes" :style="{ pointerEvents: props.disable ? 'none' : 'auto' }">
+            <RouterLink
+              to="/auditorias/pedidos"
+              class="routes"
+              :style="{ pointerEvents: props.disable ? 'none' : 'auto' }"
+            >
               <button
                 class="btn btn-primary"
                 :style="
@@ -87,7 +103,11 @@ const props = defineProps<{
           </li>
 
           <li>
-            <RouterLink to="/materiais" class="routes" :style="{ pointerEvents: props.disable ? 'none' : 'auto' }">
+            <RouterLink
+              to="/materiais"
+              class="routes"
+              :style="{ pointerEvents: props.disable ? 'none' : 'auto' }"
+            >
               <button
                 class="btn btn-primary"
                 :style="
@@ -114,7 +134,6 @@ const props = defineProps<{
 </template>
 
 <style scoped>
-
 img {
   filter: grayscale(100%);
 }
@@ -123,7 +142,7 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
 
   background-color: #734414;
   height: 100vh;
