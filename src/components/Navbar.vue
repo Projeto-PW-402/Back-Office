@@ -281,6 +281,23 @@ li {
   width: 100%;
 }
 
+@media only screen and (max-height: 1400px) {
+  .navbar-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding-top: 45%;
+    gap: 15dvh;
+    background-color: #734414;
+    height: 100dvh;
+    max-height: 100dvh;
+    /* min-height: fit-content;
+        max-height: 100dvh; */
+    max-width: 350px;
+  }
+}
+
 @media only screen and (max-height: 1024px) {
   .navbar-buttons {
     display: flex;

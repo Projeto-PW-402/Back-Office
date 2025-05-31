@@ -24,9 +24,9 @@ function updateSize() {
 
 function sizePerWindow(newHeight: number) {
   if (newHeight < 864) {
-    perPage.value = 8
+    perPage.value = 5
   } else if (newHeight < 956) {
-    perPage.value = 10
+    perPage.value = 7
   } else {
     perPage.value = 10
   }
