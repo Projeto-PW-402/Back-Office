@@ -31,14 +31,29 @@ interface data {
   user: string
   id: number
 }
+
+interface error {
+  message: string
+  error: string
+}
+
 const router = useRouter()
 const email = ref('')
+const loginError = ref('')
 
 async function confirmEmail() {
-  const response = (await fetchUserByEmail(email.value)) as data
+  let response = await fetchUserByEmail(email.value)
+
+  if (typeof response === 'string' && response === 'Error') {
+    loginError.value = 'Login não autorizado. Verifique o email.'
+    return
+  }
+
+  response = response as data
+  // Aqui response é do tipo do utilizador
   localStorage.setItem('email', response.email)
   localStorage.setItem('user', response.user)
-  console.log(response)
+  loginError.value = '' // Limpa erro se sucesso
 
   router.push({ path: '/dashboard' })
 }
@@ -47,9 +62,13 @@ const login = async (response: any) => {
   const userData = decodeCredential(response.credential) as UserData
   //   console.log('Handle the userData', userData)
   const api_response = await fetchUserByEmail(userData.email)
-  if (!api_response) {
+  console.log('API' + api_response)
+  console.log(loginError.value)
+  if (api_response == 'Error') {
+    loginError.value = 'Login não autorizado. Verifique o email.'
     return
   }
+  loginError.value = ''
   localStorage.setItem('email', userData.email)
   localStorage.setItem('user', userData.name)
 
@@ -66,6 +85,9 @@ const login = async (response: any) => {
             <div class="email-container">
               <input type="email" id="email" placeholder="Email" v-model="email" />
             </div>
+            <p v-if="loginError" style="color: red; padding-top: 4px; font-size: small">
+              {{ loginError }}
+            </p>
             <!-- <div class="password-container">
               <input type="password" id="password" placeholder="Password" />
             </div> -->

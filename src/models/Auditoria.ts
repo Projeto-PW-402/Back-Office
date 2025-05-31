@@ -8,6 +8,7 @@ export class Auditoria {
   images: any[] = []
   files: any[] = []
   materiais: { id: number; quantidade: number }[] = []
+  risco = 0
   dnome = ''
   dnif = ''
   dcontacto = ''

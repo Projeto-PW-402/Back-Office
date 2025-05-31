@@ -67,6 +67,15 @@ function randomMinus10Or10() {
   return Math.random() < 0.5 ? -10 : 10
 }
 
+function riscoNumberToString(nivel?: number) {
+  switch (nivel) {
+    case 0:
+      return 'Sem Nivel Atribuido'
+    default:
+      return nivel
+  }
+}
+
 onMounted(async () => {
   auditorias.value = await fetchAuditoriasSimple()
 })
@@ -116,6 +125,24 @@ onMounted(async () => {
             </div>
             <div class="data">
               Descrição: <span>{{ infoContent?.descricao }}</span>
+            </div>
+            <div class="data data-risco">
+              Nivel de Risco:
+              <span v-if="infoContent?.risco == undefined" :style="{ color: 'red' }"></span>
+              <span v-else-if="infoContent?.risco > 3" :style="{ color: 'red' }">{{
+                riscoNumberToString(infoContent?.risco)
+              }}</span>
+              <span
+                v-else-if="infoContent?.risco < 3 && infoContent?.risco > 0"
+                :style="{ color: 'green' }"
+                >{{ riscoNumberToString(infoContent?.risco) }}</span
+              >
+              <span v-else-if="infoContent?.risco == 0" :style="{ color: 'black' }"
+                >-- {{ riscoNumberToString(infoContent?.risco) }} --</span
+              >
+              <span v-else :style="{ color: 'orange' }">{{
+                riscoNumberToString(infoContent?.risco)
+              }}</span>
             </div>
           </div>
           <div class="reporter-info">
@@ -226,6 +253,10 @@ onMounted(async () => {
 .data span {
   font-size: large;
   font-weight: 300;
+}
+.data-risco span {
+  font-size: larger;
+  font-weight: 500;
 }
 
 .close-btn {

@@ -17,8 +17,7 @@ import {
 } from 'vue'
 import IMask from 'imask'
 import { editAuditoria, fetchAuditoriaById } from '@/services/auditoriasService'
-import { useRoute } from 'vue-router'
-import router from '@/router'
+import { useRoute, useRouter } from 'vue-router'
 
 // Modo de desenvolvimento, para testes
 const dev = true
@@ -27,7 +26,9 @@ console.log('Dev Mode:', dev)
 
 const date = ref('')
 const time = ref('')
+const risco = ref('1')
 
+const router = useRouter()
 const route = useRoute()
 const id = computed(() => Number(route.params.id))
 console.log('ID da Auditoria:', id.value)
@@ -39,46 +40,51 @@ const inputUserIds = ref<number[]>([])
 const inputQuantidades = reactive<Record<number, number>>({})
 const selectedMaterials = ref<{ id: number; quantidade: number }[]>([])
 const erro = ref('')
-// Quando finaliza ou quiser extrair os materiais selecionados
+
 async function createAuditoria() {
-  selectedMaterials.value = Object.entries(inputQuantidades)
-    .filter(([_, qtd]) => qtd > 0)
-    .map(([id, qtd]) => ({
-      id: Number(id),
-      quantidade: qtd,
-    }))
+  try {
+    selectedMaterials.value = Object.entries(inputQuantidades)
+      .filter(([_, qtd]) => qtd > 0)
+      .map(([id, qtd]) => ({
+        id: Number(id),
+        quantidade: qtd,
+      }))
 
-  for (const m of selectedMaterials.value) {
-    const material: Material = await fetchMaterialById(m.id)
-    if (material) {
-      material.quant -= m.quantidade
+    for (const m of selectedMaterials.value) {
+      const material: Material = await fetchMaterialById(m.id)
+      if (material) {
+        material.quant -= m.quantidade
+      }
+      await updateMaterial(m.id, material)
+      auditoria['materiais'].push({
+        id: m.id,
+        quantidade: m.quantidade,
+      })
     }
-    await updateMaterial(m.id, material)
-    auditoria['materiais'].push({
-      id: m.id,
-      quantidade: m.quantidade,
-    })
-  }
-  for (const u of inputUserIds.value) {
-    const user: User = await fetchUserById(u)
-    if (user) {
-      user['listaAuditorias'].push(id.value)
-      await updateUser(u, user)
+    for (const u of inputUserIds.value) {
+      const user: User = await fetchUserById(u)
+      if (user) {
+        user['listaAuditorias'].push(id.value)
+        await updateUser(u, user)
+      }
     }
+
+    auditoria.date = date.value + ' ' + time.value
+    auditoria.status = 1
+    auditoria.risco = parseInt(risco.value)
+
+    await editAuditoria(id.value, auditoria)
+
+    if (dev) {
+      console.log('Materiais Selecionados', selectedMaterials.value)
+      console.log('Utilizadores Selecionados', inputUserIds.value)
+      console.log('Auditoria Atualizada:', auditoria)
+    }
+    // Alterar a query na URL para fechar o modal
+    router.push({ path: '/auditorias/pedidos' })
+  } catch {
+    return
   }
-
-  auditoria.date = date.value + ' ' + time.value
-  auditoria.status = 1
-
-  await editAuditoria(id.value, auditoria)
-
-  if (dev) {
-    console.log('Materiais Selecionados', selectedMaterials.value)
-    console.log('Utilizadores Selecionados', inputUserIds.value)
-    console.log('Auditoria Atualizada:', auditoria)
-  }
-  // Alterar a query na URL para fechar o modal
-  router.push({ path: '/auditorias/pedidos', query: { add: 'false' } })
 }
 
 const users = ref<User[]>([])
@@ -259,16 +265,28 @@ onBeforeMount(async () => {
           <div class="bottom-right-container">
             <div class="little-title">Finalizar</div>
             <div class="form">
-              <div class="data-container">
-                <input
-                  ref="inputRef"
-                  v-model="date"
-                  placeholder="dd/mm/yyyy"
-                  class="form-control"
-                  type="text"
-                  required
-                />
-                <label class="data-label" for="data">Data</label>
+              <div class="first-layer">
+                <div class="data-container">
+                  <input
+                    ref="inputRef"
+                    v-model="date"
+                    placeholder="dd/mm/yyyy"
+                    class="form-control"
+                    type="text"
+                    required
+                  />
+                  <label class="data-label" for="data">Data</label>
+                </div>
+                <div class="selector-container">
+                  <select v-model="risco" class="selector" required>
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                  <label class="Nivel Risco" for="risco">Nivel de Risco</label>
+                </div>
               </div>
               <div class="inicio-container">
                 <input
@@ -282,6 +300,7 @@ onBeforeMount(async () => {
                 />
                 <label class="inicio-label" for="inicio">Inicio</label>
               </div>
+
               <button type="submit" class="btn btn-primary">Finalizar</button>
             </div>
           </div>
@@ -588,6 +607,22 @@ onBeforeMount(async () => {
 
   font-weight: 500;
   font-size: 1.1rem;
+}
+
+.first-layer {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 3rem;
+}
+.selector-container {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 30%;
+}
+.selector {
+  height: 32px;
+  border: 1px solid black;
 }
 .data-container {
   display: flex;

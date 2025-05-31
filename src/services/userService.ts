@@ -34,6 +34,11 @@ export const fetchUserByEmail = async (email: string) => {
     const response = await fetch(API_URL + `/user?email=${email}`)
     if (!response.ok) return null
     const data = await response.json()
+
+    if (data['status'] == 'Error') {
+      return 'Error'
+    }
+
     const user_email = data['email']
     const user = data['nome']
     const user_id = data['id']
@@ -73,6 +78,20 @@ export const createUser = async (data: User) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
+  })
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message || 'Erro ao criar usuário')
+  }
+  return response.json()
+}
+export const notifyUser = async (id: number) => {
+  const response = await fetch(API_URL + '/user/notify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(id),
   })
   if (!response.ok) {
     const error = await response.json()

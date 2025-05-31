@@ -127,6 +127,14 @@ async function removeUser(userId: number) {
   }
 }
 
+async function askLocation(userId: number) {
+  try {
+    await userId
+  } catch (error) {
+    console.error('Erro ao eliminar utilizador:', error)
+  }
+}
+
 const paginatedUsers = computed(() => {
   const start = (currentPage.value - 1) * perPage.value
   return users.value.slice(start, start + perPage.value)
@@ -247,6 +255,9 @@ onMounted(() => {
                   <Plus width="20px" height="20px" />
                 </button>
                 <button class="actions" style="color: red" @click="removeUser(user.id)">
+                  <Trash2Icon width="20px" height="20px" />
+                </button>
+                <button class="actions" style="color: black" @click="">
                   <Trash2Icon width="20px" height="20px" />
                 </button>
               </td>

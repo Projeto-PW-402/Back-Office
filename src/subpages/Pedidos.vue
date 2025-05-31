@@ -9,6 +9,7 @@ import { editAuditoria, fetchAuditorias, generateFile } from '@/services/auditor
 const options = []
 const selected = ref<number[]>([])
 const perPage = ref(10)
+const estadoFiltro = ref('todas')
 const route = useRoute()
 const router = useRouter()
 
@@ -57,8 +58,11 @@ const toggleSelectAll = () => {
 
 const paginatedpedidos = computed(() => {
   const start = (currentPage.value - 1) * perPage.value
-  return pedidos.value.slice(start, start + perPage.value)
+  return auditoriasFiltradas.value.slice(start, start + perPage.value)
 })
+
+// total de páginas com base no filtro
+const totalPages = computed(() => Math.ceil(auditoriasFiltradas.value.length / perPage.value))
 
 const selectedPage = computed(() => {
   const page = route.query.page
@@ -78,6 +82,25 @@ async function loadAuditorias() {
   }
 }
 
+const auditoriasFiltradas = computed(() => {
+  if (estadoFiltro.value === 'todas') {
+    return pedidos.value
+  }
+  if (estadoFiltro.value === 'em_espera') {
+    return pedidos.value.filter((a) => a.status === 0)
+  }
+  if (estadoFiltro.value === 'aceite') {
+    return pedidos.value.filter((a) => a.status === 1)
+  }
+  if (estadoFiltro.value === 'terminada') {
+    return pedidos.value.filter((a) => a.status === 2)
+  }
+  if (estadoFiltro.value === 'rejeitada') {
+    return pedidos.value.filter((a) => a.status === -1)
+  }
+  return pedidos.value
+})
+
 onMounted(async () => {
   await loadAuditorias()
   console.log(pedidos.value)
@@ -88,7 +111,6 @@ onBeforeUnmount(() => {
   clearInterval(intervalId)
 })
 
-const totalPages = computed(() => Math.ceil(pedidos.value.length / perPage.value))
 const currentPage = ref(selectedPage.value)
 
 const visiblePages = computed(() => {
@@ -168,6 +190,15 @@ async function downloadFile(id: number) {
     console.error('Erro ao editar Estado:', error)
   }
 }
+
+function riscoNumberToString(nivel: number) {
+  switch (nivel) {
+    case 0:
+      return 'Sem Nivel Atribuido'
+    default:
+      return nivel
+  }
+}
 </script>
 
 <template>
@@ -177,10 +208,21 @@ async function downloadFile(id: number) {
       <div class="container-fluid p-4 bg-light" id="table-container">
         <h2 class="mb-4 fw-bold" id="title">Auditorias</h2>
         <div class="table-responsive bg-white">
+          <div class="filtro-container">
+            <label for="filtroEstado">Filtrar por estado:</label>
+            <select id="filtroEstado" v-model="estadoFiltro">
+              <option value="todas">Todas</option>
+              <option value="em_espera">Em Espera</option>
+              <option value="aceite">Aceite</option>
+              <option value="terminada">Terminada</option>
+              <option value="rejeitada">Não Aceites</option>
+            </select>
+          </div>
           <table class="table mb-0">
             <thead class="text-center align-middle">
               <tr>
                 <th scope="col">Estado</th>
+                <th scope="col">Nivel de Risco</th>
                 <th scope="col">Utilizador</th>
                 <th scope="col">Local</th>
                 <th scope="col">Data</th>
@@ -201,6 +243,11 @@ async function downloadFile(id: number) {
                     Aceite <Check />
                   </p>
                   <p v-else :style="{ color: 'gray' }">Terminado <Check /></p>
+                </td>
+                <td
+                  :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }"
+                >
+                  {{ riscoNumberToString(pedido.risco) }}
                 </td>
                 <td
                   :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }"
