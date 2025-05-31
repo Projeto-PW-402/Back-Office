@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router'
 
 const routes = [
   {
@@ -28,11 +28,7 @@ const routes = [
     component: () => import('../pages/Utilizadores.vue'),
   },
   {
-    path: '/auditorias',
-    redirect: (to) => {
-      // the function receives the target route as the argument
-      return to.path.replace('auditorias', 'auditorias/pedidos')
-    },
+    path: '/auditorias/pedidos',
     name: 'Auditorias',
     component: () => import('../subpages/Pedidos.vue'),
     children: [
