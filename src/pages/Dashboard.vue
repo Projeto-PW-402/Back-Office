@@ -2,18 +2,19 @@
 import Navbar from '../components/Navbar.vue'
 import Estatistica from '../components/Estatistica.vue'
 import ChartAuditorias from '../components/ChartAuditorias.vue'
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 import { fetchAuditorias, fetchAuditoriasSimple } from '@/services/auditoriasService'
 import { fetchUsers } from '@/services/userService'
+import type { Auditoria } from '@/models/Auditoria'
+import type { ApexOptions } from 'apexcharts'
 
-const series = ref([
+const series_line = ref<{ name: string; data: number[] }[]>([
   {
     name: 'Auditorias',
-    data: [45, 52, 38, 24, 33, 26, 21],
+    data: [],
   },
 ])
-
 const chartOptions = ref({
   chart: {
     id: 'auditorias-chart',
@@ -74,6 +75,64 @@ async function getNumberOfAuditorias() {
   }
 }
 
+function getAuditoriasPorMes2025(auditorias: { date: string }[]): number[] {
+  const contagem = Array(12).fill(0)
+
+  auditorias.forEach(({ date }) => {
+    if (!date) return
+
+    const [dataParte] = date.split(' ')
+    let partes
+
+    if (dataParte.includes('/')) {
+      partes = dataParte.split('/')
+    } else {
+      partes = dataParte.split('-')
+    }
+
+    if (partes.length !== 3) return
+
+    const [dia, mes, ano] = partes.map(Number)
+    if (ano === 2025 && mes >= 1 && mes <= 12) {
+      contagem[mes - 1]++
+    }
+  })
+
+  return contagem
+}
+
+const lineChartOptions = ref<ApexOptions>({
+  chart: {
+    id: 'auditorias-chart',
+    toolbar: {
+      show: false,
+    },
+  },
+  xaxis: {
+    categories: [
+      'Jan',
+      'Fev',
+      'Mar',
+      'Abr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Set',
+      'Out',
+      'Nov',
+      'Dez',
+    ],
+  },
+  colors: ['#008FFB'],
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    curve: 'smooth',
+  },
+})
+
 onMounted(async () => {
   const auditorias = await fetchAuditoriasSimple()
 
@@ -97,6 +156,9 @@ onMounted(async () => {
   labels.value = Object.keys(contagemLocais)
   series_pizza.value = Object.values(contagemLocais)
 
+  const auditorias_line = await fetchAuditorias()
+  series_line.value[0].data = getAuditoriasPorMes2025(auditorias_line)
+
   getNumberOfWorkers()
   getNumberOfAuditorias()
 })
@@ -115,22 +177,24 @@ onMounted(async () => {
               <div class="box-counter">{{ workersCount }}</div>
             </div>
             <div class="box totais">
-              <div class="box-title">Total</div>
+              <div class="box-title">Auditorias</div>
               <div class="box-counter">{{ auditoriasCount }}</div>
             </div>
             <div class="box andamento">
-              <div class="box-title">Em Andamento</div>
+              <div class="box-title">Auditorias Em Andamento</div>
               <div class="box-counter">{{ auditoriasAndamentoCount }}</div>
             </div>
             <div class="box finalizadas">
-              <div class="box-title">Terminadas</div>
+              <div class="box-title">Auditorias Terminadas</div>
               <div class="box-counter">{{ auditoriasTerminadasCount }}</div>
             </div>
           </div>
         </div>
         <div class="bottom">
           <div class="row bottom-left">
+            <div class="graph-title">Nº Auditorias por Região</div>
             <VueApexCharts
+              class="graph"
               type="pie"
               :series="series_pizza"
               :options="{
@@ -147,7 +211,7 @@ onMounted(async () => {
                         height: undefined,
                         showForSingleSeries: true,
                         show: true,
-                        fontSize: '14px',
+                        fontSize: '16px',
                         labels: {
                           useSeriesColors: true,
                         },
@@ -168,7 +232,14 @@ onMounted(async () => {
             />
           </div>
           <div class="row bottom-right">
-            <VueApexCharts type="line" :series="series" :options="chartOptions" width="450" />
+            <div class="graph-title">Nº Auditorias por Mes</div>
+            <VueApexCharts
+              class="graph"
+              type="line"
+              :series="series_line"
+              :options="lineChartOptions"
+              width="550"
+            />
           </div>
         </div>
       </div>
@@ -278,15 +349,42 @@ onMounted(async () => {
 
 .bottom {
   display: flex;
+  justify-content: center;
   flex-direction: row;
+  gap: 5rem;
 }
 
 .bottom-left {
-  background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 5px;
+  width: 55%;
+}
+
+.bottom-left .graph {
+  /* background-color: green; */
+  width: fit-content;
+}
+
+.bottom-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 5px;
   width: 50%;
 }
-.bottom-right {
-  background-color: blue;
-  width: 50%;
+
+.bottom-right .graph {
+  /* background-color: green; */
+  width: fit-content;
+}
+
+.graph-title {
+  font-family: Poppins, sans-serif;
+  font-weight: 600;
+  font-size: larger;
 }
 </style>
