@@ -12,7 +12,7 @@ const router = useRouter()
 
 function signout() {
   localStorage.clear()
-  router.push({ path: '/' })
+  router.push({ path: '/login' })
 }
 </script>
 
