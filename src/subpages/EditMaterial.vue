@@ -13,6 +13,7 @@ const route = useRoute()
 const router = useRouter()
 const emit = defineEmits(['material-added', 'material-edited'])
 
+const queryID = ref()
 const nome = ref()
 const tipo = ref()
 const descricao = ref()
@@ -22,6 +23,7 @@ const materialVisible = ref<boolean>(true)
 
 watchEffect(() => {
   const id = Number(route.query.id)
+  queryID.value = id
   const edit = route.query.edit
   isVisible.value = edit === 'true'
 
@@ -63,7 +65,7 @@ async function editMaterial() {
     visible: isMaterialVisible.value,
   })
   try {
-    await updateMaterial(material.id, material)
+    await updateMaterial(queryID.value, material)
     emit('material-edited')
     router.push({ path: '/materiais' })
   } catch (error) {
@@ -81,7 +83,7 @@ function closeEditModal() {
   <div class="main-container" :style="{ display: props.isModalVisible ? 'flex' : 'none' }">
     <div class="title">Editar Material</div>
     <div class="close" @click="closeEditModal"><X /></div>
-    <form id="materialForm" @submit.prevent="editMaterial">
+    <form id="materialForm" @submit.prevent="editMaterial(queryID)">
       <div class="name-container">
         <input type="text" id="name" v-model="nome" :placeholder="nome" />
         <label class="name-label" for="name">Nome</label>

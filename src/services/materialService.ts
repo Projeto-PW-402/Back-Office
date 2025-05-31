@@ -49,6 +49,7 @@ export const createMaterial = async (data: Material) => {
 }
 
 export const updateMaterial = async (id: number, data: Material) => {
+  console.log(id)
   const response = await fetch(API_URL + `/material/edit/${id}`, {
     method: 'PUT',
     headers: {
