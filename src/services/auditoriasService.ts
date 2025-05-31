@@ -1,6 +1,12 @@
 import { Auditoria } from '@/models/Auditoria'
 const API_URL = 'http://127.0.0.1:5000'
 
+interface Objeto {
+  id: number
+  lat: number
+  lng: number
+}
+
 export const fetchAuditorias = async () => {
   try {
     const response = await fetch(API_URL + '/auditoria/get')
@@ -10,6 +16,27 @@ export const fetchAuditorias = async () => {
       return []
     }
     return data
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error)
+    throw error
+  }
+}
+
+export const fetchAuditoriasSimple = async () => {
+  try {
+    const response = await fetch(API_URL + '/auditoria/get')
+    if (!response.ok) throw new Error('Erro ao buscar usuários')
+    const data = await response.json()
+
+    if (!data) {
+      return []
+    }
+    const object = data.map((item: Objeto) => ({
+      lat: item.lat,
+      lng: item.lng,
+      id: item.id,
+    }))
+    return object
   } catch (error) {
     console.error('Erro ao buscar usuários:', error)
     throw error
@@ -32,6 +59,20 @@ export const editAuditoria = async (id: number, data: Auditoria) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
+  })
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message || 'Erro ao editar auditoria')
+  }
+  return response.json()
+}
+
+export const generateFile = async (id: number) => {
+  const response = await fetch(API_URL + `/auditoria/generate?id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   })
   if (!response.ok) {
     const error = await response.json()

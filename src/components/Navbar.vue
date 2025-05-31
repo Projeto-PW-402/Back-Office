@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import { LogOut, User, LayoutDashboard, Monitor, Users, NotebookPen, Anvil } from 'lucide-vue-next'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 
 const props = defineProps<{
   page: number
   disable?: boolean
 }>()
+
+const user = localStorage.getItem('user')
+const router = useRouter()
+
+function signout() {
+  localStorage.clear()
+  router.push({ path: '/' })
+}
 </script>
 
 <template>
@@ -15,7 +23,7 @@ const props = defineProps<{
         <img src="../assets/logo.png" alt="Logo" class="logo" width="145px" height="145px" />
       </div>
       <div class="navbar-user">
-        <button class="btn btn-secondary">User <User color="white" /></button>
+        <button class="btn btn-secondary"><User color="white" />{{ user }}</button>
       </div>
       <nav>
         <ul>
@@ -124,8 +132,8 @@ const props = defineProps<{
         </ul>
       </nav>
       <div class="navbar-logout">
-        <button id="logout" class="btn btn-primary" :disabled="props.disable">
-          Sair
+        <button id="logout" class="btn btn-primary" :disabled="props.disable" @click="signout">
+          Sign Out
           <LogOut class="icons" />
         </button>
       </div>
@@ -135,7 +143,7 @@ const props = defineProps<{
 
 <style scoped>
 img {
-  filter: grayscale(100%);
+  filter: contrast(10%);
 }
 .navbar-container {
   position: static;
@@ -156,11 +164,11 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding-block: 2rem;
+  justify-content: center;
+  padding-block: 10%;
 
   background-color: #734414;
-  height: 50rem;
+  /* height: 50rem; */
   /* min-height: fit-content;
         max-height: 100dvh; */
   max-width: 350px;
@@ -201,7 +209,7 @@ li {
   width: 100%;
   height: 3.5rem;
 
-  background-color: rgba(217, 217, 217, 15%);
+  background-color: rgba(217, 217, 217, 0);
   border: none;
   display: flex;
   justify-content: baseline;
@@ -224,37 +232,37 @@ li {
 
 .btn-secondary {
   width: 100%;
-  height: 58px;
+  height: fit-content;
 
-  background-color: rgba(217, 217, 217, 15%);
+  background-color: rgba(214, 122, 42, 0);
   border: none;
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 12px;
+  align-items: start;
+  gap: 5px;
 
   font-family: Inter;
   font-size: 18px;
   font-weight: 600;
 }
 .btn-secondary:focus {
-  background-color: rgba(217, 217, 217, 15%);
+  background-color: rgba(217, 217, 217, 0);
   cursor: default;
 }
-.btn-secondary:hover {
+/* .btn-secondary:hover {
   background-color: rgba(217, 217, 217, 15%);
   cursor: default;
-}
+} */
 
 #logout {
   width: 15rem;
   height: 3.5rem;
-  background-color: rgba(217, 217, 217, 15%);
-  border: none;
+  background-color: rgba(214, 122, 42, 0.676);
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 12px;
+  font-size: 20px;
 }
 #logout:active {
   /* Button moving fix */
@@ -276,8 +284,25 @@ li {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    padding-block: 10%;
+    gap: 5dvh;
+    background-color: #734414;
+    height: 100dvh;
+    max-height: 100dvh;
+    /* min-height: fit-content;
+        max-height: 100dvh; */
+    max-width: 350px;
+  }
+}
+@media only screen and (max-height: 800px) {
+  .navbar-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: space-between;
-    padding-block: 2rem;
+    padding-block: 10%;
+    gap: 1dvh;
 
     background-color: #734414;
     height: 50rem;
@@ -286,48 +311,51 @@ li {
         max-height: 100dvh; */
     max-width: 350px;
   }
-  @media only screen and (max-height: 600px) {
-    .navbar-buttons {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding-block: 2rem;
+  ul {
+    gap: 0.5rem;
+  }
+}
+@media only screen and (max-height: 600px) {
+  .navbar-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 10%;
+    gap: 1dvh;
 
-      background-color: #734414;
-      height: 50rem;
-      max-height: 100dvh;
-      /* min-height: fit-content;
+    background-color: #734414;
+    height: 50rem;
+    max-height: 100dvh;
+    /* min-height: fit-content;
         max-height: 100dvh; */
-      max-width: 350px;
-    }
-    ul {
-      gap: 0.5rem;
-    }
+    max-width: 350px;
   }
-
-  .navbar-logo {
-    display: flex;
-    width: fit-content;
-    height: fit-content;
-    justify-content: center;
-    align-items: center;
+  ul {
+    gap: 0.5rem;
   }
-  .btn-primary {
-    width: 100%;
-    height: 3.5rem;
+}
 
-    background-color: rgba(217, 217, 217, 15%);
-    border: none;
-    display: flex;
-    justify-content: baseline;
-    padding-left: 12px;
-    align-items: center;
-    gap: 12px;
+.navbar-logo {
+  display: flex;
+  width: fit-content;
+  height: fit-content;
+  justify-content: center;
+  align-items: center;
+}
+.btn-primary {
+  width: 100%;
+  height: 3.5rem;
 
-    font-family: Inter;
-    font-size: 18px;
-    font-weight: 600;
-  }
+  border: none;
+  display: flex;
+  justify-content: baseline;
+  padding-left: 12px;
+  align-items: center;
+  gap: 12px;
+
+  font-family: Inter;
+  font-size: 18px;
+  font-weight: 600;
 }
 </style>

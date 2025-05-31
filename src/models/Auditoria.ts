@@ -15,6 +15,8 @@ export class Auditoria {
   location = ''
   status = -1
   date = ''
+  lat = ''
+  lng = ''
 
   constructor(data?: Partial<Auditoria>) {
     Object.assign(this, data)

@@ -453,7 +453,7 @@ ul {
 }
 
 .page-link {
-  font-family: Poppins, sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 500;
   font-size: 16px;
   border: none;
@@ -463,7 +463,7 @@ ul {
 }
 
 .active {
-  color: lightblue;
+  color: rgb(255, 159, 63);
   font-weight: 600;
   font-size: 20px;
 }

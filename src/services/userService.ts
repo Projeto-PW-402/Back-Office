@@ -29,6 +29,28 @@ export const fetchUserById = async (id: number) => {
   }
 }
 
+export const fetchUserByEmail = async (email: string) => {
+  try {
+    const response = await fetch(API_URL + `/user?email=${email}`)
+    if (!response.ok) return null
+    const data = await response.json()
+    const user_email = data['email']
+    const user = data['nome']
+    const user_id = data['id']
+
+    let dados = {
+      email: user_email,
+      user: user,
+      id: user_id,
+    }
+
+    return dados
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error)
+    throw error
+  }
+}
+
 export const updateUser = async (id: number, data: User) => {
   const response = await fetch(API_URL + `/user/edit/${id}`, {
     method: 'PUT',

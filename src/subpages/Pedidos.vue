@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar.vue'
 import { Check, X, Info, FileText, Timer } from 'lucide-vue-next'
 import { computed, h, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { editAuditoria, fetchAuditorias } from '@/services/auditoriasService'
+import { editAuditoria, fetchAuditorias, generateFile } from '@/services/auditoriasService'
 
 const options = []
 const selected = ref<number[]>([])
@@ -150,6 +150,24 @@ async function requestInfo(auditoria_id: number, data: Auditoria) {
     console.error('Erro ao editar Estado:', error)
   }
 }
+async function terminarAuditoria(auditoria_id: number, data: Auditoria) {
+  data.status = 2
+  try {
+    await editAuditoria(auditoria_id, data)
+    await loadAuditorias()
+    console.log('Estado:', auditoria_id)
+  } catch (error) {
+    console.error('Erro ao editar Estado:', error)
+  }
+}
+
+async function downloadFile(id: number) {
+  try {
+    await generateFile(id)
+  } catch (error) {
+    console.error('Erro ao editar Estado:', error)
+  }
+}
 </script>
 
 <template>
@@ -179,7 +197,10 @@ async function requestInfo(auditoria_id: number, data: Auditoria) {
                     Em Análise <Timer />
                   </p>
                   <p v-else-if="pedido.status === -1" :style="{ color: 'red' }">Recusado <X /></p>
-                  <p v-else :style="{ color: 'green' }">Aceite <Check /></p>
+                  <p v-else-if="pedido.status === 1" :style="{ color: 'green' }">
+                    Aceite <Check />
+                  </p>
+                  <p v-else :style="{ color: 'gray' }">Terminado <Check /></p>
                 </td>
                 <td
                   :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }"
@@ -199,35 +220,45 @@ async function requestInfo(auditoria_id: number, data: Auditoria) {
                 <td
                   :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }"
                 >
-                  <button
-                    class="actions"
-                    style="color: green"
-                    @click="onAccept(pedido.id)"
-                    :disabled="pedido['status'] == 1"
-                  >
-                    <Check width="20px" height="20px" />
-                  </button>
-                  <button
-                    class="actions"
-                    style="color: red"
-                    @click="rejectAuditoria(pedido.id, pedido)"
-                    :disabled="pedido['status'] == 1"
-                  >
-                    <X width="20px" height="20px" />
-                  </button>
-                  <button
-                    class="actions"
-                    style="color: yellow"
-                    @click="requestInfo(pedido.id, pedido)"
-                    :disabled="pedido['status'] == 1"
-                  >
-                    <Info width="20px" height="20px" />
-                  </button>
+                  <template v-if="pedido.status !== 1 && pedido.status !== 2">
+                    <button @click="onAccept(pedido.id)" class="actions" style="color: green">
+                      <Check width="20px" height="20px" />
+                    </button>
+                    <button
+                      @click="rejectAuditoria(pedido.id, pedido)"
+                      class="actions"
+                      style="color: red"
+                    >
+                      <X width="20px" height="20px" />
+                    </button>
+                    <button
+                      @click="requestInfo(pedido.id, pedido)"
+                      class="actions"
+                      style="color: yellow"
+                    >
+                      <Info width="20px" height="20px" />
+                    </button>
+                  </template>
+
+                  <template v-else-if="pedido.status === 1">
+                    <button
+                      @click="terminarAuditoria(pedido.id, pedido)"
+                      class="actions"
+                      :style="{ color: 'red', fontSize: '20px' }"
+                    >
+                      Terminar
+                    </button>
+                  </template>
+                  <template v-else>
+                    <button class="actions" :style="{ color: 'gray', fontSize: '20px' }">
+                      No Actions
+                    </button>
+                  </template>
                 </td>
                 <td
                   :style="{ backgroundColor: selected.includes(pedido.id) ? 'lightblue' : 'white' }"
                 >
-                  <button class="download">
+                  <button class="download" @click="downloadFile(pedido.id)">
                     Download
                     <FileText width="20px" height="20px" />
                   </button>
@@ -460,7 +491,7 @@ ul {
   margin-top: 20px;
 }
 .page-link {
-  font-family: Poppins, sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 500;
   font-size: 16px;
   border: none;
@@ -469,7 +500,7 @@ ul {
   gap: 10px;
 }
 .active {
-  color: lightblue;
+  color: rgb(255, 159, 63);
   font-weight: 600;
   font-size: 20px;
 }
@@ -508,13 +539,5 @@ ul {
   height: auto;
   margin-right: 5px;
   transition: transform 0.2s linear;
-}
-
-.download:hover {
-  transform: scale(1.05);
-}
-
-.actions:hover {
-  transform: rotate(5deg) scale(1.4);
 }
 </style>
