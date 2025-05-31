@@ -4,7 +4,7 @@ export class Material {
   tipo = ''
   descricao = ''
   quant = 0
-  preco = 0
+  preco = 0.0
   visible = true
 
   constructor(data?: Partial<Material>) {

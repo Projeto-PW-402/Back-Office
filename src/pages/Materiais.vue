@@ -90,16 +90,6 @@ onBeforeUnmount(() => {
   clearInterval(intervalId)
 })
 
-async function editMaterial(materialId: number, data: Material) {
-  try {
-    await updateMaterial(materialId, data)
-    await loadMaterials()
-    console.log('Utilizador eliminado com sucesso:', materialId)
-  } catch (error) {
-    console.error('Erro ao eliminar utilizador:', error)
-  }
-}
-
 async function hideMaterial(data: Material) {
   const materialId = data.id
   data.visible = false
@@ -242,11 +232,7 @@ function hEditMaterial(data: Material) {
                 <button class="actions" style="color: red" @click="hideMaterial(material)">
                   <Trash2Icon width="20px" height="20px" />
                 </button>
-                <button
-                  class="actions"
-                  style="color: orange"
-                  @click="editMaterial(material.id, material)"
-                >
+                <button class="actions" style="color: orange" @click="hEditMaterial(material)">
                   <Pencil width="20px" height="20px" />
                 </button>
               </td>

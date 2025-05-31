@@ -97,7 +97,7 @@ function closeEditModal() {
         </div>
       </div>
       <div class="preco-container">
-        <input type="number" id="preco" v-model="preco" :placeholder="preco" />
+        <input type="number" id="preco" v-model.number="preco" :placeholder="preco" step="0.01" />
         <label class="preco-label" for="preco">Preço</label>
       </div>
       <div class="descricao-container">
