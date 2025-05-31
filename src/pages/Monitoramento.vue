@@ -2,7 +2,7 @@
 import { onMounted, ref, watch } from 'vue'
 import Navbar from '../components/Navbar.vue'
 import { GoogleMap, CustomMarker } from 'vue3-google-map'
-import { Pin, XSquareIcon } from 'lucide-vue-next'
+import { Pin, CircleX } from 'lucide-vue-next'
 import {
   fetchAuditoriaById,
   fetchAuditorias,
@@ -63,6 +63,10 @@ function getEstadoString(status?: number) {
   }
 }
 
+function randomMinus10Or10() {
+  return Math.random() < 0.5 ? -10 : 10
+}
+
 onMounted(async () => {
   auditorias.value = await fetchAuditoriasSimple()
 })
@@ -86,32 +90,48 @@ onMounted(async () => {
         >
           <div class="marker-container">
             <div class="marker-label">{{ aud.id }}</div>
-            <Pin color="white" />
+            <Pin color="white" :style="{ transform: `rotate(${randomMinus10Or10()}deg)` }" />
           </div>
           <!-- marcador visual -->
         </CustomMarker>
       </GoogleMap>
       <!-- Janela de info simples -->
-      <div v-if="showInfo" class="info-window">
-        <button @click="closeInfo" class="close-btn">
-          <XSquareIcon />
-        </button>
-        <div class="title">{{ infoContent?.nome }}</div>
-        <div class="info-container">
-          <div class="status">Estado: {{ getEstadoString(infoContent?.status) }}</div>
-          <div class="date" v-if="infoContent?.status == undefined"></div>
-          <div class="date" v-else-if="infoContent?.status <= 0">
-            Data de Reporte: {{ infoContent?.date }}
+      <transition name="fade-slide">
+        <div v-if="showInfo" class="info-window">
+          <button @click="closeInfo" class="close-btn">
+            <CircleX class="icon" fill="white" />
+          </button>
+          <div class="title">{{ infoContent?.nome }}</div>
+          <div class="info-container">
+            <div class="sub-title">Informação</div>
+            <div class="data">
+              Estado: <span>{{ getEstadoString(infoContent?.status) }}</span>
+            </div>
+            <div class="data" v-if="infoContent?.status == undefined"></div>
+            <div class="data" v-else-if="infoContent?.status <= 0">
+              Data de Reporte: <span>{{ infoContent?.date }}</span>
+            </div>
+            <div class="data" v-else>
+              Data de Inicio: <span>{{ infoContent?.date }}</span>
+            </div>
+            <div class="data">
+              Descrição: <span>{{ infoContent?.descricao }}</span>
+            </div>
           </div>
-          <div class="date" v-else>Data de Inicio: {{ infoContent?.date }}</div>
-          <div class="tipo">Descrição: {{ infoContent?.descricao }}</div>
+          <div class="reporter-info">
+            <div class="sub-title">Informação do Notificador</div>
+            <div class="data">
+              Nome: <span>{{ infoContent?.dnome }}</span>
+            </div>
+            <div class="data">
+              Email: <span> {{ infoContent?.demail }}</span>
+            </div>
+            <div class="data">
+              Nome: <span>{{ infoContent?.dcontacto }}</span>
+            </div>
+          </div>
         </div>
-        <div class="reporter-info">
-          <div class="dname">Nome: {{ infoContent?.dnome }}</div>
-          <div class="demail">Email: {{ infoContent?.demail }}</div>
-          <div class="dcontacto">Nome: {{ infoContent?.dcontacto }}</div>
-        </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -140,24 +160,100 @@ onMounted(async () => {
 
 .info-window {
   position: absolute;
-  top: 20px;
+  top: calc(50% - 500px / 2);
   left: 20px;
   background: white;
-  border-radius: 8px;
+  border-radius: 3px;
   padding: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  min-width: 400px;
+  max-width: 450px;
+  min-width: 450px;
   z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: baseline;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.title {
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 1px;
+  font-size: x-large;
+  font-weight: 600;
+  align-self: center;
+}
+
+.info-container {
+  font-family: Poppins, monospace;
+  font-size: large;
+  font-weight: 500;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.info-container .sub-title {
+  text-align: center;
+}
+
+.reporter-info {
+  padding-top: 10px;
+  font-family: Poppins, monospace;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reporter-info .sub-title {
+  text-align: center;
+  font-size: large;
+  font-weight: 600;
+}
+
+.data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
+
+  font-size: large;
+  font-weight: 600;
+}
+
+.data span {
+  font-size: large;
+  font-weight: 300;
 }
 
 .close-btn {
   position: absolute;
-  right: 10px;
-  top: 5px;
+  right: -15px;
+  top: -12.5px;
   background: transparent;
   border: none;
   font-weight: bold;
   cursor: pointer;
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateX(0);
 }
 </style>

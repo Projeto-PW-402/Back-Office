@@ -21,9 +21,9 @@ function signout() {
     <div class="navbar-buttons">
       <div class="navbar-logo">
         <img src="../assets/logo.png" alt="Logo" class="logo" width="145px" height="145px" />
-      </div>
-      <div class="navbar-user">
-        <button class="btn btn-secondary"><User color="white" />{{ user }}</button>
+        <div class="navbar-user">
+          <button class="btn btn-secondary"><User color="white" />{{ user }}</button>
+        </div>
       </div>
       <nav>
         <ul>
@@ -143,14 +143,14 @@ function signout() {
 
 <style scoped>
 img {
-  filter: contrast(10%);
+  filter: contrast(0%);
 }
 .navbar-container {
   position: static;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
 
   background-color: #734414;
   height: 100vh;
@@ -176,12 +176,14 @@ img {
 
 .navbar-logo {
   display: flex;
+  flex-direction: column;
   width: fit-content;
   height: fit-content;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
 }
+
 .navbar-user {
   width: 15rem;
 }
@@ -279,14 +281,14 @@ li {
   width: 100%;
 }
 
-@media only screen and (min-width: 1024px) {
+@media only screen and (max-height: 1024px) {
   .navbar-buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding-block: 10%;
-    gap: 5dvh;
+    justify-content: start;
+    padding-top: 45%;
+    gap: 15dvh;
     background-color: #734414;
     height: 100dvh;
     max-height: 100dvh;
@@ -295,14 +297,31 @@ li {
     max-width: 350px;
   }
 }
-@media only screen and (max-height: 800px) {
+@media only screen and (max-height: 980px) {
   .navbar-buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding-block: 10%;
-    gap: 1dvh;
+    justify-content: start;
+    padding-top: 15%;
+    gap: 12dvh;
+    background-color: #734414;
+    height: 100dvh;
+    max-height: 100dvh;
+    /* min-height: fit-content;
+        max-height: 100dvh; */
+    max-width: 350px;
+  }
+}
+@media only screen and (max-height: 900px) {
+  .navbar-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+    /* padding-top: 20%; */
+    gap: 6rem;
 
     background-color: #734414;
     height: 50rem;
@@ -315,14 +334,36 @@ li {
     gap: 0.5rem;
   }
 }
+@media only screen and (max-height: 800px) {
+  .navbar-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+    /* padding-top: 20%; */
+    gap: 3rem;
+
+    background-color: #734414;
+    height: 50rem;
+    max-height: 100dvh;
+    /* min-height: fit-content;
+        max-height: 100dvh; */
+    max-width: 350px;
+  }
+  ul {
+    gap: 0.5rem;
+  }
+}
+
 @media only screen and (max-height: 600px) {
   .navbar-buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding-block: 10%;
-    gap: 1dvh;
+    justify-content: center;
+    padding-top: 5%;
+    gap: 1rem;
 
     background-color: #734414;
     height: 50rem;
