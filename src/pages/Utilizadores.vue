@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Plus, Trash2Icon } from 'lucide-vue-next'
+import { Plus, Trash2Icon, BellRing } from 'lucide-vue-next'
 import Navbar from '../components/Navbar.vue'
 import {
   computed,
@@ -13,7 +13,7 @@ import {
 } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import NewUser from '@/subpages/NewUser.vue'
-import { fetchUsers, deleteUser } from '@/services/userService'
+import { fetchUsers, deleteUser, notifyUser } from '@/services/userService'
 import type { User } from '@/models/User'
 
 const options = []
@@ -129,7 +129,7 @@ async function removeUser(userId: number) {
 
 async function askLocation(userId: number) {
   try {
-    await userId
+    await notifyUser(userId)
   } catch (error) {
     console.error('Erro ao eliminar utilizador:', error)
   }
@@ -257,8 +257,8 @@ onMounted(() => {
                 <button class="actions" style="color: red" @click="removeUser(user.id)">
                   <Trash2Icon width="20px" height="20px" />
                 </button>
-                <button class="actions" style="color: black" @click="">
-                  <Trash2Icon width="20px" height="20px" />
+                <button class="actions" style="color: black" @click="askLocation(user.id)">
+                  <BellRing width="20px" height="20px" />
                 </button>
               </td>
             </tr>

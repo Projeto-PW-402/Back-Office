@@ -86,7 +86,7 @@ export const createUser = async (data: User) => {
   return response.json()
 }
 export const notifyUser = async (id: number) => {
-  const response = await fetch(API_URL + '/user/notify', {
+  const response = await fetch(API_URL + '/user/notification/send', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

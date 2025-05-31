@@ -209,7 +209,7 @@ function riscoNumberToString(nivel: number) {
         <h2 class="mb-4 fw-bold" id="title">Auditorias</h2>
         <div class="table-responsive bg-white">
           <div class="filtro-container">
-            <label for="filtroEstado">Filtrar por estado:</label>
+            <label for="filtroEstado">Filtar</label>
             <select id="filtroEstado" v-model="estadoFiltro">
               <option value="todas">Todas</option>
               <option value="em_espera">Em Espera</option>
@@ -421,6 +421,52 @@ function riscoNumberToString(nivel: number) {
   max-height: 100dvh;
   display: flex;
   flex-direction: column;
+}
+
+.filtro-container {
+  display: flex;
+  justify-content: end;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  gap: 10px;
+  font-family: 'Poppins', Courier, monospace;
+}
+
+.filtro-container select {
+  appearance: none; /* Remove o estilo padrão do navegador */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding-left: 2px;
+  font-size: 1rem;
+  color: #222;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  /* width: 150px;  */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D'10'%20height%3D'5'%20viewBox%3D'0%200%2010%205'%20xmlns%3D'http%3A//www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M0%200l5%205%205-5z'%20fill%3D'%23333'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 5px;
+}
+
+select:hover {
+  border-color: #aaa;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+}
+
+option {
+  padding: 5px 10px;
+  background-color: white;
+  color: #222;
+}
+
+/* Para browsers que suportam */
+select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
 }
 
 .sub-navbar-container {
